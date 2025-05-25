@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { useRobots } from "../../context/RobotContext";
-import MissionForm from "./MissionForm";
-import { initMission } from "../../utils/types";
-import type { Mission } from "../../utils/types";
-import { useMissionDispatch, useMissions } from "../../context/MissionContext";
-import { Delete, Edit, Stop } from "../../utils/Icons";
+import { useState } from 'react';
+import { useRobots } from '../../context/RobotContext';
+import MissionForm from './MissionForm';
+import { initMission } from '../../utils/types';
+import type { Mission } from '../../utils/types';
+import { useMissionDispatch, useMissions } from '../../context/MissionContext';
+import { Delete, Edit, SiteIcon } from '../../utils/Icons';
 
 export function MissionsList() {
   const missions = useMissions();
@@ -20,17 +20,17 @@ export function MissionsList() {
   }
 
   function handleAddMission() {
-    dispatch({ type: "add", payload: { ...initMission, id: missions.length } });
+    dispatch({ type: 'add', payload: { ...initMission, id: missions.length } });
     setFormIsOpen(true);
   }
 
   function handleMissionEdit(mission: Mission) {
-    dispatch({ type: "edit", payload: { ...mission, selected: true } });
+    dispatch({ type: 'edit', payload: { ...mission, selected: true } });
     setFormIsOpen(true);
   }
 
   async function handleMissionStop(mission: Mission) {
-    dispatch({ type: "update", payload: { ...mission, active: false } });
+    dispatch({ type: 'update', payload: { ...mission, active: false } });
   }
 
   // Starting or pausing mission: loading the mission's Robot, or removing it from render.
@@ -66,7 +66,7 @@ export function MissionsList() {
   //   }
 
   function handleDeleteMission(mission: Mission) {
-    dispatch({ type: "remove", payload: mission });
+    dispatch({ type: 'remove', payload: mission });
   }
 
   //--------------------------------------------------------------------
@@ -92,7 +92,7 @@ export function MissionsList() {
                   onClick={() => handleMissionStop(mission)}
                   className="px-3 opacity-75 hover:opacity-100 active:scale-90"
                 >
-                  <Stop size={20} className="stroke-lime-600 stroke-2 fill-none" />
+                  <SiteIcon size={84} className="stroke-white stroke-[0.5] fill-none" />
                 </button>
                 {/* Play/pause mission button ------------------------------------------------*/}
                 {/* <button

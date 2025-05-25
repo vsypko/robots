@@ -1,4 +1,4 @@
-export function MenuBar({ size = 16, className = "" }) {
+export function MenuBar({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
       <rect x="1.5" y="1" width={21} height={4} />
@@ -8,7 +8,7 @@ export function MenuBar({ size = 16, className = "" }) {
   );
 }
 
-export function Xmark({ size = 16, className = "" }) {
+export function Xmark({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
       <polygon points="4,1 12,9 20,1 23,4 15,12 23,20 20,23 12,15 4,23 1,20 9,12 1,4" />
@@ -16,7 +16,7 @@ export function Xmark({ size = 16, className = "" }) {
   );
 }
 
-export function ArrowRight({ size = 16, className = "" }) {
+export function ArrowRight({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
       <polygon points="6,1 18,12 6,23" />
@@ -24,7 +24,7 @@ export function ArrowRight({ size = 16, className = "" }) {
   );
 }
 
-export function WiFi({ size = 16, className = "" }) {
+export function WiFi({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
       <path d="M1 6 A20 20 0 0 1 23 6" />
@@ -35,7 +35,7 @@ export function WiFi({ size = 16, className = "" }) {
   );
 }
 
-export function Edit({ size = 16, className = "" }) {
+export function Edit({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
       <path d="M1 6 A20 20 0 0 1 23 6" />
@@ -46,7 +46,7 @@ export function Edit({ size = 16, className = "" }) {
   );
 }
 
-export function Delete({ size = 16, className = "" }) {
+export function Delete({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
       <path d="M1 6 A20 20 0 0 1 23 6" />
@@ -57,7 +57,7 @@ export function Delete({ size = 16, className = "" }) {
   );
 }
 
-export function ArrowLeft({ size = 16, className = "" }) {
+export function ArrowLeft({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
       <polygon points="18,1 6,12 18,23" />
@@ -65,7 +65,7 @@ export function ArrowLeft({ size = 16, className = "" }) {
   );
 }
 
-export function ArrowUp({ size = 16, className = "" }) {
+export function ArrowUp({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
       <polygon points="1,16 12,4 23,16" />
@@ -73,7 +73,7 @@ export function ArrowUp({ size = 16, className = "" }) {
   );
 }
 
-export function ArrowDown({ size = 16, className = "" }) {
+export function ArrowDown({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
       <polygon points="1,8 12,20 23,8" />
@@ -81,7 +81,7 @@ export function ArrowDown({ size = 16, className = "" }) {
   );
 }
 
-export function Stop({ size = 16, className = "" }) {
+export function Stop({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
       <rect x="1" y="1" width={21} height={21} />
@@ -89,7 +89,7 @@ export function Stop({ size = 16, className = "" }) {
   );
 }
 
-export function ArrowsExpand({ size = 16, color = "currentColor" }) {
+export function ArrowsExpand({ size = 16, color = 'currentColor' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" strokeWidth={1.2} stroke={color} fill="none">
       <polygon points="1,1 8,1 6,3 9,6 6,9 3,6 1,8" />
@@ -100,7 +100,7 @@ export function ArrowsExpand({ size = 16, color = "currentColor" }) {
   );
 }
 
-export function ArrowsNarrow({ size = 16, color = "currentColor" }) {
+export function ArrowsNarrow({ size = 16, color = 'currentColor' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" strokeWidth={1.2} stroke={color} fill="none">
       <polygon points="9,9 2,9 4,7 1,4 4,1 7,4 9,2" />
@@ -111,7 +111,7 @@ export function ArrowsNarrow({ size = 16, color = "currentColor" }) {
   );
 }
 
-export function TurnOff({ size = 16, color = "currentColor" }) {
+export function TurnOff({ size = 16, color = 'currentColor' }) {
   return (
     <svg
       width={size}
@@ -129,7 +129,7 @@ export function TurnOff({ size = 16, color = "currentColor" }) {
   );
 }
 
-export function Ok({ size = 16, color = "currentColor" }) {
+export function Ok({ size = 16, color = 'currentColor' }) {
   return (
     <svg
       width={size}
@@ -143,6 +143,52 @@ export function Ok({ size = 16, color = "currentColor" }) {
     >
       <circle cx="12" cy="12" r="10" />
       <polyline points="8 12 12 17 17 9" />
+    </svg>
+  );
+}
+
+export function SiteIcon({ size = 16, className = '' }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      // fill="none"
+      // stroke={color}
+      // strokeWidth="2.5"
+      // strokeLinecap="round"
+      // strokeLinejoin="round"
+      className={className}
+    >
+      <line x1="1" y1="63" x2="63" y2="63" strokeWidth={2} strokeLinecap="round" />
+      <path d="M28 63 l4 -54 h5 l4 54 m-3 -34 h-7 m-1 10 h9 m1 10 h-11 z" strokeWidth={2} fill="#20a050" />
+      <rect x="2" y="54" width={4} height={8} strokeWidth={2} fill="none" />
+      <rect x="8" y="59" width={20} height={4} strokeWidth={2} fill="none" />
+      <path d="M10 59 l6 -25 h4 l6 25" strokeWidth={2} />
+      <path d="M14 44 h7 l-8 8 h10 l-10 -9 " strokeWidth={2} />
+
+      <line x1="4" y1="34" x2="4" y2="75" strokeWidth={2} transform="translate(0, 3)" />
+      <g transform="rotate(20 18 36)">
+        <rect x="9" y="32" width={18} height={2} strokeWidth={2} stroke="#703030" />
+        <path d="M5 24 c-5 4 -1 17 2 20 h2 c-1 -5 -3 -5 -1 -20 z" strokeWidth={2} fill="#20a050" stroke="#703030" />
+      </g>
+
+      <path
+        d="m39 16 a0.5 0.5 0 0 1 0.5 0.5 v1 a0.5 0.5 0 0 1 -0.5 0.5 h-9 a0.5 0.5 0 0 1 -0.5 -0.5 v-1 a0.5 0.5 0 0 1 0.5 -0.5 Z"
+        strokeWidth={2}
+        fill="currentColor"
+      />
+
+      <path strokeWidth={2} fill="#20a050" d="M34 62 v-2 a 1 1 0 0 1 1 -1 h22 a 1 1 0 0 1 1 1 v2 z" />
+      <path
+        fill="#2050B0"
+        strokeWidth={2}
+        d="M36 59 v-5 a1 1 0 0 1 0 -2 v-4 a1 1 0 0 1 0 -2 v-4 a8 8 0 0 1 8 -8 v-2 h4 v2 a8 8 0 0 1 8 8 v4 a1 1 0 0 1 0 2 v4 a1 1 0 0 1 0 2 v5 z"
+      />
+
+      <path d="M46 39 c-18 21 18 21 0 0 Z" fill="white" strokeWidth={1} />
+      <path d="M43 46 c-5 8 7 11 0 0" fill="#2050B0" strokeWidth={1} />
+      <path d="M46 32 v-3 a4 4 0 0 1 4 -4 h2 a4 4 0 0 1 4 4 v14 h3 a3 3 0 0 1 3 3 v17" strokeWidth={2} />
     </svg>
   );
 }
