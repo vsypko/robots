@@ -192,3 +192,19 @@ export function SiteIcon({ size = 16, className = '' }) {
     </svg>
   );
 }
+
+export function ReportsIcon({ size = 16, className = '' }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" className={className} stroke="currentColor">
+      <line x1="6" y1="5" x2="30" y2="5" strokeWidth={2} strokeLinecap="round" />
+      <line x1="6" y1="10" x2="30" y2="10" strokeWidth={2} strokeLinecap="round" />
+      <line x1="6" y1="15" x2="30" y2="15" strokeWidth={2} strokeLinecap="round" />
+      <path d="M63 8 v54 a2 2 0 0 1 -2 2 h-58 a2 2 0 0 1 -2 -2 v-60 a2 2 0 0 1 2 -2 h50 l10 8 l-8 0 a2 2 0 0 1 -2 -2 v-6" />
+      <path d="M41 35 a14 14 1 1 0 20 14 h-14 z" />
+      <path d="M42 33 a14 14 0 0 1 7 -0.5 l-2 14 z" />
+      <path d="M51 33 a14 14 0 0 1 8 6 l-11 8 z" />
+      <path d="M60 40 a14 14 0 0 1 2 8 l-13 0 z" />
+      <path d="M6 56 a2 2 1 1 0 2 0.5 l6 -15 a2 2 0 1 1 2 1 l4 8 a2 2 1 1 0 2 0 l10 -16 a2 2 0 1 1 0.5 0.5" />
+    </svg>
+  );
+}

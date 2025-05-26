@@ -4,7 +4,7 @@ import MissionForm from './MissionForm';
 import { initMission } from '../../utils/types';
 import type { Mission } from '../../utils/types';
 import { useMissionDispatch, useMissions } from '../../context/MissionContext';
-import { Delete, Edit, SiteIcon } from '../../utils/Icons';
+import { Delete, Edit, ReportsIcon, SiteIcon } from '../../utils/Icons';
 
 export function MissionsList() {
   const missions = useMissions();
@@ -92,7 +92,7 @@ export function MissionsList() {
                   onClick={() => handleMissionStop(mission)}
                   className="px-3 opacity-75 hover:opacity-100 active:scale-90"
                 >
-                  <SiteIcon size={84} className="stroke-white stroke-[0.5] fill-none" />
+                  <ReportsIcon size={24} className="stroke-white stroke-[0.5] fill-none" />
                 </button>
                 {/* Play/pause mission button ------------------------------------------------*/}
                 {/* <button
