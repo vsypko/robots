@@ -1,36 +1,36 @@
-import { useContext, createContext, useReducer } from "react";
-import type { Dispatch, ReactElement } from "react";
-import type { Mission } from "../utils/types";
+import { useContext, createContext, useReducer } from 'react';
+import type { Dispatch, ReactElement } from 'react';
+import type { Mission } from '../utils/types';
 
 interface MissionAction {
-  type: "add" | "edit" | "update" | "remove";
+  type: 'add' | 'edit' | 'update' | 'remove';
   payload: Mission;
 }
 
 function missionReducer(state: Mission[], action: MissionAction): Mission[] {
   switch (action.type) {
-    case "add": {
+    case 'add': {
       const mission = action.payload;
       return [...state, mission];
     }
 
-    case "edit": {
+    case 'edit': {
       const { id } = action.payload;
       return state.map((mission) => (mission.id === id ? { ...mission, selected: true } : mission));
     }
 
-    case "update": {
+    case 'update': {
       const { id } = action.payload;
       return state.map((mission) => (mission.id === id ? action.payload : mission));
     }
 
-    case "remove": {
+    case 'remove': {
       const { id } = action.payload;
       return state.filter((mission) => mission.id !== id);
     }
 
     default: {
-      throw new Error("Unknown action: " + action.type);
+      throw new Error('Unknown action: ' + action.type);
     }
   }
 }
@@ -42,7 +42,7 @@ const MissionDispatchContext = createContext<Dispatch<MissionAction> | undefined
 export function useMissions() {
   const context = useContext(MissionContext);
   if (context === undefined) {
-    throw new Error("useMission must be used within a MissionProvider");
+    throw new Error('useMission must be used within a MissionProvider');
   }
   return context;
 }
@@ -51,7 +51,7 @@ export function useMissions() {
 export function useMissionDispatch() {
   const context = useContext(MissionDispatchContext);
   if (context === undefined) {
-    throw new Error("useMissionDispatch must be used within a MissionProvider");
+    throw new Error('useMissionDispatch must be used within a MissionProvider');
   }
   return context;
 }

@@ -1,15 +1,16 @@
-import * as THREE from "three";
-import { useRef, useState } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
-import { RapierRigidBody, RigidBody } from "@react-three/rapier";
+import * as THREE from 'three';
+import { useContext, useRef, useState } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { PerspectiveCamera, useGLTF } from '@react-three/drei';
+import { RapierRigidBody, RigidBody } from '@react-three/rapier';
 
-import { useRobots } from "../../context/RobotContext";
-import { movement } from "../../utils/movement";
-import { useRobotsDispatch } from "../../context/RobotContext";
+import { useRobots } from '../../context/RobotContext';
+import { movement } from '../../utils/movement';
+import { useRobotsDispatch } from '../../context/RobotContext';
 
-import type { CollisionTarget } from "@react-three/rapier";
-import type { GLTF } from "three-stdlib";
+import type { CollisionTarget } from '@react-three/rapier';
+import type { GLTF } from 'three-stdlib';
+import { CameraContext } from '../../context/CameraContext';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -21,7 +22,7 @@ type GLTFResult = GLTF & {
 
   materials: {
     Material: THREE.MeshStandardMaterial;
-    ["Material.001"]: THREE.MeshStandardMaterial;
+    ['Material.001']: THREE.MeshStandardMaterial;
     lentes: THREE.MeshStandardMaterial;
     plastico: THREE.MeshStandardMaterial;
   };
@@ -36,13 +37,14 @@ const isCloseToZero = (value: number): boolean => {
 export default function BB8() {
   const robots = useRobots();
   const dispatch = useRobotsDispatch();
+  const { selfCamera } = useContext(CameraContext);
 
   const robot = robots.find((robot) => robot.id === 1);
   const [init] = useState({ x: robot!.x, z: robot!.z });
 
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const rotativObject = useRef<THREE.Group>(null);
-  const { nodes, materials } = useGLTF("/bb8.glb") as unknown as GLTFResult;
+  const { nodes, materials } = useGLTF('/bb8.glb') as unknown as GLTFResult;
 
   const handleCollisionEnter = (other: CollisionTarget) => {
     if (!rigidBodyRef.current || !robot || !other.rigidBodyObject) return;
@@ -53,7 +55,7 @@ export default function BB8() {
 
     const position = other.rigidBodyObject.position;
 
-    const { x, z, angle } = movement("collision", robot.x, robot.z, robot.angle, robot.id, {
+    const { x, z, angle } = movement('collision', robot.x, robot.z, robot.angle, robot.id, {
       x: position.x,
       z: position.z,
     });
@@ -89,6 +91,7 @@ export default function BB8() {
     >
       <group dispose={null}>
         <group name="root">
+          {selfCamera && <PerspectiveCamera makeDefault position={[0, 2.5, 0]} fov={60} near={0.01} far={100} />}
           <group name="GLTF_SceneRootNode">
             <group name="Cuerpo_1" ref={rotativObject}>
               <mesh
@@ -105,7 +108,7 @@ export default function BB8() {
                 castShadow
                 receiveShadow
                 geometry={nodes.Object_6.geometry}
-                material={materials["Material.001"]}
+                material={materials['Material.001']}
               />
               <group name="opticos_2" position={[-0.194, 1.141, -0.468]} rotation={[2.639, -0.346, 2.957]}>
                 <mesh
@@ -131,4 +134,4 @@ export default function BB8() {
   );
 }
 
-useGLTF.preload("/bb8.glb");
+useGLTF.preload('/bb8.glb');

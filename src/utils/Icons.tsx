@@ -35,24 +35,25 @@ export function WiFi({ size = 16, className = '' }) {
   );
 }
 
-export function Edit({ size = 16, className = '' }) {
+export function EditIcon({ size = 16, className = '' }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
-      <path d="M1 6 A20 20 0 0 1 23 6" />
-      <path d="M4 11 A14 14 0 0 1 20 11" />
-      <path d="M7 16 A8 8 0 0 1 17 16" />
-      <circle cx="12" cy="21" r="1" />
+    <svg height={size} width={size} viewBox="0 0 24 24" className={className}>
+      <path d="M15 4 l3 -3 a6 6 0 0 1 5 5 l-3 3 a6 6 0 0 0 -5 -5 m-1 1 a6 6 0 0 1 5 5 l-10 10 l-6 1 l1 -6 Z m-10 10 a6 6 0 0 1 5 5 m-9 4 l20 0" />
     </svg>
   );
 }
 
-export function Delete({ size = 16, className = '' }) {
+export function DeleteIcon({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
-      <path d="M1 6 A20 20 0 0 1 23 6" />
-      <path d="M4 11 A14 14 0 0 1 20 11" />
-      <path d="M7 16 A8 8 0 0 1 17 16" />
-      <circle cx="12" cy="21" r="1" />
+      <path d="M10 2 a1 2 0 0 1 1 -1 h2 a1 2 0 0 1 1 1 Z" />
+      <path d="M4 4 a1 2 0 0 1 1 -2 h14 a1 2  0 0 1 1 2 Z" />
+      <circle cx="18" cy="21" r="1" />
+      <path d="M17 21 h-11 l-1 -15 h14 l-1 14" />
+
+      <path d="M8 8 l0.5 11" strokeLinecap="round" />
+      <path d="M12 8 l0 11" strokeLinecap="round" />
+      <path d="M16 8 l-0.5 11" strokeLinecap="round" />
     </svg>
   );
 }
@@ -81,7 +82,7 @@ export function ArrowDown({ size = 16, className = '' }) {
   );
 }
 
-export function Stop({ size = 16, className = '' }) {
+export function StopIcon({ size = 16, className = '' }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
       <rect x="1" y="1" width={21} height={21} />
