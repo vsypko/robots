@@ -16,10 +16,8 @@ export default function App() {
 
         <Joystick />
       </div>
-      <div className="w-full md:w-4/5 h-full rounded-2xl border-slate-800 dark:border-slate-200 border relative">
-        <div className="h-full overflow-visible">
-          <Court />
-        </div>
+      <div className="w-full md:w-4/5 h-full rounded-2xl border-slate-800 dark:border-slate-200 border overflow-hidden">
+        <Court />
       </div>
     </div>
   );
