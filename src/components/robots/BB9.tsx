@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { useRef, useState } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useContext, useRef, useState } from "react";
+import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import { useRobots } from "../../context/RobotContext";
 import { useFrame } from "@react-three/fiber";
@@ -8,6 +8,9 @@ import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { CollisionTarget } from "@react-three/rapier";
 import { movement } from "../../utils/movement";
 import { useRobotsDispatch } from "../../context/RobotContext";
+import type { PerspectiveCamera as PerspectiveCameraType } from "three";
+import { CameraContext } from "../../context/CameraContext";
+import { useMissions } from "../../context/MissionContext";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -35,13 +38,16 @@ const isCloseToZero = (value: number): boolean => {
   return Math.abs(value) < TOLERANCE;
 };
 
-export default function BB9() {
+export default function BB9({ camera }: { camera: React.RefObject<PerspectiveCameraType | null> }) {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const rotative = useRef<THREE.Group | null>(null);
   const { nodes, materials } = useGLTF("/bb9.glb") as unknown as GLTFResult;
 
   const robots = useRobots();
   const dispatch = useRobotsDispatch();
+  const { selfCamera } = useContext(CameraContext);
+  const missions = useMissions();
+  const mission = missions.find((mission) => mission.selected);
   const robot = robots.find((robot) => robot.id === 2);
   const [init] = useState({ x: robot!.x, z: robot!.z });
 
@@ -89,6 +95,9 @@ export default function BB9() {
         position={[init.x, -0.6, init.z]}
       >
         <group dispose={null}>
+          {selfCamera && mission?.robot_id === 2 && (
+            <PerspectiveCamera ref={camera} makeDefault position={[0, 4.5, -0.75]} fov={60} near={0.01} far={100} />
+          )}
           <group position={[0, 3.228, 0]} rotation={[-Math.PI / 2, 0, Math.PI]}>
             <mesh
               castShadow

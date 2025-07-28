@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { useRef, useState } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useContext, useRef, useState } from "react";
+import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import { useFrame } from "@react-three/fiber";
 import { useRobots } from "../../context/RobotContext";
@@ -8,6 +8,9 @@ import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { CollisionTarget } from "@react-three/rapier";
 import { movement } from "../../utils/movement";
 import { useRobotsDispatch } from "../../context/RobotContext";
+import type { PerspectiveCamera as PerspectiveCameraType } from "three";
+import { CameraContext } from "../../context/CameraContext";
+import { useMissions } from "../../context/MissionContext";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -18,13 +21,16 @@ type GLTFResult = GLTF & {
   };
 };
 
-export default function R2D2() {
+export default function R2D2({ camera }: { camera: React.RefObject<PerspectiveCameraType | null> }) {
   const { nodes, materials } = useGLTF("/r2d2.glb") as unknown as GLTFResult;
   const rigidBodyRef = useRef<RapierRigidBody | null>(null);
 
   //get robot data from context and rerender ---------------------------------
   const robot = useRobots().find((robot) => Number(robot.id) === 0);
   const dispatch = useRobotsDispatch();
+  const { selfCamera } = useContext(CameraContext);
+  const missions = useMissions();
+  const mission = missions.find((mission) => mission.selected);
   const [init] = useState({ x: robot!.x, z: robot!.z });
 
   const handleCollisionEnter = (other: CollisionTarget) => {
@@ -62,6 +68,9 @@ export default function R2D2() {
         position={[init.x, -0.55, init.z]}
       >
         <group dispose={null}>
+          {selfCamera && mission?.robot_id === 0 && (
+            <PerspectiveCamera ref={camera} makeDefault position={[0, 0.8, -0.15]} fov={60} near={0.01} far={100} />
+          )}
           <mesh
             castShadow
             receiveShadow
