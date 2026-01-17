@@ -10,36 +10,28 @@ import { CameraContext } from '../../context/CameraContext';
 import MainCamera from './MainCamera';
 
 function MultiCameraRender({
-  mainCam,
   topCam,
   miniSize = 300,
 }: {
-  mainCam: React.RefObject<PerspectiveCameraType | null>;
   topCam: React.RefObject<PerspectiveCameraType | null>;
   miniSize?: number;
 }) {
-  const { gl, size, scene } = useThree();
-  useEffect(() => {
-    gl.autoClear = false;
-  }, [gl]);
-
-  useFrame(() => {
-    const width = size.width;
+  useFrame(({ gl, size, scene }) => {
     const height = size.height;
-
+    gl.autoClear = false;
     gl.setScissorTest(true);
-
-    gl.setViewport(0, 0, width, height);
-    gl.setScissor(0, 0, width, height);
-    gl.clear(true, true, true);
-    if (mainCam.current) gl.render(scene, mainCam.current!);
-
-    // gl.setViewport(10, height - miniSize - 10, miniSize, miniSize);
-    // gl.setScissor(10, height - miniSize - 10, miniSize, miniSize);
-    // gl.clear(true, true, true);
-    // if (topCam.current) gl.render(scene, topCam.current!);
-
+    gl.setViewport(10, height - miniSize - 10, miniSize, miniSize);
+    gl.setScissor(10, height - miniSize - 10, miniSize, miniSize);
+    if (topCam.current) {
+      topCam.current.aspect = 1;
+      topCam.current.updateProjectionMatrix();
+      gl.render(scene, topCam.current!);
+    }
+    gl.clearDepth();
     gl.setScissorTest(false);
+    gl.setViewport(0, 0, size.width, size.height);
+    gl.setScissor(0, 0, size.width, size.height);
+    gl.clear();
   });
 
   return null;
@@ -57,15 +49,14 @@ export default function Court() {
         {!selfCamera && (
           <>
             <PerspectiveCamera ref={mainCamera} makeDefault position={[0, 10, 25]} fov={60} near={0.01} far={1000} />
-            <OrbitControls />
+            {/* <OrbitControls /> */}
           </>
           // <MainCamera cameraRef={mainCamera} />
         )}
-        <PerspectiveCamera
+        <orthographicCamera
           ref={topCamera}
           position={[0, 40, 0]}
           rotation={[-Math.PI / 2, 0, 0]}
-          fov={60}
           near={0.01}
           far={100}
         />
