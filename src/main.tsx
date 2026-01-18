@@ -5,7 +5,6 @@ import App from './App.tsx';
 import { RobotProvider } from './context/RobotContext.tsx';
 import { MissionProvider } from './context/MissionContext.tsx';
 import { CpProvider } from './context/CpContext.tsx';
-import CameraProvider from './context/CameraProvider.tsx';
 
 if (
   localStorage.theme === 'dark' ||
@@ -18,14 +17,12 @@ root!.setAttribute('class', 'bg-slate-200 dark:bg-slate-800');
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CameraProvider>
-      <RobotProvider>
-        <CpProvider>
-          <MissionProvider>
-            <App />
-          </MissionProvider>
-        </CpProvider>
-      </RobotProvider>
-    </CameraProvider>
+    <RobotProvider>
+      <CpProvider>
+        <MissionProvider>
+          <App />
+        </MissionProvider>
+      </CpProvider>
+    </RobotProvider>
   </StrictMode>
 );

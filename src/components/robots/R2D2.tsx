@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import { useFrame } from "@react-three/fiber";
@@ -7,7 +7,6 @@ import { useRobots } from "../../context/RobotContext";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { CollisionTarget } from "@react-three/rapier";
 import { useRobotsDispatch } from "../../context/RobotContext";
-import { CameraContext } from "../../context/CameraContext";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -21,7 +20,6 @@ type GLTFResult = GLTF & {
 export default function R2D2() {
   const { nodes, materials } = useGLTF("/r2d2.glb") as unknown as GLTFResult;
   const rigidBodyRef = useRef<RapierRigidBody | null>(null);
-  const { selfCamera } = useContext(CameraContext);
 
   //get robot data from context and rerender ---------------------------------
   const robot = useRobots().find((robot) => Number(robot.id) === 1);
@@ -58,7 +56,7 @@ export default function R2D2() {
     >
 
       <group dispose={null}>
-        {selfCamera === 1 && <PerspectiveCamera makeDefault position={[0, 0.9, -0.08]} fov={60} near={0.01} far={100} />}
+        {robot?.selfCamera && <PerspectiveCamera makeDefault position={[0, 0.9, -0.08]} fov={60} near={0.01} far={100} />}
         <mesh
           castShadow
           receiveShadow

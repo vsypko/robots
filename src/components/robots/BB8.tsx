@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { useContext, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { PerspectiveCamera, useGLTF } from '@react-three/drei';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
@@ -9,7 +9,6 @@ import { useRobotsDispatch } from '../../context/RobotContext';
 
 import type { CollisionTarget } from '@react-three/rapier';
 import type { GLTF } from 'three-stdlib';
-import { CameraContext } from '../../context/CameraContext';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -36,7 +35,6 @@ const isCloseToZero = (value: number): boolean => {
 export default function BB8() {
   const robots = useRobots();
   const dispatch = useRobotsDispatch();
-  const { selfCamera } = useContext(CameraContext);
 
   const robot = robots.find((robot) => robot.id === 2);
   const [init] = useState({ x: robot!.x, z: robot!.z });
@@ -84,7 +82,7 @@ export default function BB8() {
       position={[init.x, 0.45, init.z]}
       scale={[0.8, 0.8, 0.8]}
     >
-      {selfCamera === 2 && <PerspectiveCamera makeDefault up={[0, 1, 0]} position={[0, 1.6, -0.8]} fov={60} near={0.01} far={100} />}
+      {robot?.selfCamera && <PerspectiveCamera makeDefault up={[0, 1, 0]} position={[0, 1.6, -0.8]} fov={60} near={0.01} far={100} />}
       <group dispose={null}>
         <group name="root">
 

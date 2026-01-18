@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import { useRobots } from "../../context/RobotContext";
@@ -7,7 +7,6 @@ import { useFrame } from "@react-three/fiber";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { CollisionTarget } from "@react-three/rapier";
 import { useRobotsDispatch } from "../../context/RobotContext";
-import { CameraContext } from "../../context/CameraContext";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -39,7 +38,6 @@ export default function BB9() {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const rotative = useRef<THREE.Group | null>(null);
   const { nodes, materials } = useGLTF("/bb9.glb") as unknown as GLTFResult;
-  const { selfCamera } = useContext(CameraContext);
 
   const robots = useRobots();
   const dispatch = useRobotsDispatch();
@@ -84,7 +82,7 @@ export default function BB9() {
       onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       position={[init.x, -0.6, init.z]}
     >
-      {selfCamera === 3 && <PerspectiveCamera makeDefault position={[0, 3.8, -1]} fov={90} near={0.01} far={100} />}
+      {robot?.selfCamera && <PerspectiveCamera makeDefault position={[0, 3.8, -1]} fov={90} near={0.01} far={100} />}
       <group dispose={null}>
         <group position={[0, 3.228, 0]} rotation={[-Math.PI / 2, 0, Math.PI]}>
           <mesh
