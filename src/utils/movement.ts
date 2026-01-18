@@ -5,7 +5,7 @@ type Another = {
 export function movement(keycode: string, x: number, z: number, currentAngl: number, id: number, another?: Another) {
   let angle = currentAngl;
   const border = 18;
-  const step = id == 4 ? 0.2 : 0.1;
+  const step = 0.05;
 
   if (another) {
     if (x >= another.x) x += step;

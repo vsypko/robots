@@ -25,17 +25,17 @@ export default function Joystick() {
           <RobotPosition robot={robot} />
         </div>
         <div className="flex w-full justify-center">
-          <JoystickButton keypressed="ArrowUp" robot={robot} />
+          <JoystickButton keypressed="ArrowUp" />
         </div>
         <div className="flex w-full justify-center items-center">
-          <JoystickButton keypressed="ArrowLeft" robot={robot} />
+          <JoystickButton keypressed="ArrowLeft" />
 
           <WiFi size={70} className={`stroke-4 fill-none ${robot ? 'stroke-orange-600' : 'stroke-lime-700'}`} />
 
-          <JoystickButton keypressed="ArrowRight" robot={robot} />
+          <JoystickButton keypressed="ArrowRight" />
         </div>
         <div className="flex w-full justify-center">
-          <JoystickButton keypressed="ArrowDown" robot={robot} />
+          <JoystickButton keypressed="ArrowDown" />
         </div>
       </div>
     </div>

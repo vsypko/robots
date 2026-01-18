@@ -1,13 +1,13 @@
 import * as THREE from "three";
-import { useRef, useState } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useContext, useRef, useState } from "react";
+import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import { useFrame } from "@react-three/fiber";
 import { useRobots } from "../../context/RobotContext";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { CollisionTarget } from "@react-three/rapier";
-import { movement } from "../../utils/movement";
 import { useRobotsDispatch } from "../../context/RobotContext";
+import { CameraContext } from "../../context/CameraContext";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -21,9 +21,10 @@ type GLTFResult = GLTF & {
 export default function R2D2() {
   const { nodes, materials } = useGLTF("/r2d2.glb") as unknown as GLTFResult;
   const rigidBodyRef = useRef<RapierRigidBody | null>(null);
+  const { selfCamera } = useContext(CameraContext);
 
   //get robot data from context and rerender ---------------------------------
-  const robot = useRobots().find((robot) => Number(robot.id) === 0);
+  const robot = useRobots().find((robot) => Number(robot.id) === 1);
   const dispatch = useRobotsDispatch();
   const [init] = useState({ x: robot!.x, z: robot!.z });
 
@@ -36,12 +37,7 @@ export default function R2D2() {
 
     const position = other.rigidBodyObject.position;
 
-    const { x, z, angle } = movement("collision", robot.x, robot.z, robot.angle, robot.id, {
-      x: position.x,
-      z: position.z,
-    });
-
-    dispatch({ ...robot, x, z, angle });
+    dispatch({ type: 'collision', payload: { id: robot.id, another: { x: position.x, z: position.z } } });
   };
 
   useFrame(() => {
@@ -53,25 +49,25 @@ export default function R2D2() {
   });
 
   return (
-    <group>
-      <RigidBody
-        ref={rigidBodyRef}
-        colliders="hull"
-        onCollisionEnter={({ other }) => handleCollisionEnter(other)}
-        scale={[4, 4, 4]}
-        position={[init.x, -0.55, init.z]}
-      >
-        <group dispose={null}>
-          <mesh
-            castShadow
-            receiveShadow
-            geometry={nodes.Object_2.geometry}
-            material={materials.R2D2Tex}
-            rotation={[0, Math.PI, 0]}
-          />
-        </group>
-      </RigidBody>
-    </group>
+    <RigidBody
+      ref={rigidBodyRef}
+      colliders="hull"
+      onCollisionEnter={({ other }) => handleCollisionEnter(other)}
+      scale={[4, 4, 4]}
+      position={[init.x, -0.55, init.z]}
+    >
+
+      <group dispose={null}>
+        {selfCamera === 1 && <PerspectiveCamera makeDefault position={[0, 0.9, -0.08]} fov={60} near={0.01} far={100} />}
+        <mesh
+          castShadow
+          receiveShadow
+          geometry={nodes.Object_2.geometry}
+          material={materials.R2D2Tex}
+          rotation={[0, Math.PI, 0]}
+        />
+      </group>
+    </RigidBody>
   );
 }
 

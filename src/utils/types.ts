@@ -13,6 +13,7 @@ export type Robot = {
   x: number;
   z: number;
   angle: number;
+  selected?: boolean;
 };
 
 export type CheckPoint = {
@@ -35,28 +36,28 @@ export const initMission: Mission = {
   id: 0,
   name: '',
   checkPoints: [],
-  robot_id: -1,
+  robot_id: 0,
   active: false,
   selected: true,
 };
 
 export const initRobots: Robot[] = [
   {
-    id: 0,
+    id: 1,
     name: 'R2D2',
     x: -5.0,
     z: 0.0,
     angle: Math.PI,
   },
   {
-    id: 1,
+    id: 2,
     name: 'BB8',
     x: 0.0,
     z: 0.0,
     angle: Math.PI,
   },
   {
-    id: 2,
+    id: 3,
     name: 'BB9',
     x: 5.0,
     z: 0.0,

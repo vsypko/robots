@@ -5,7 +5,6 @@ import { PerspectiveCamera, useGLTF } from '@react-three/drei';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
 
 import { useRobots } from '../../context/RobotContext';
-import { movement } from '../../utils/movement';
 import { useRobotsDispatch } from '../../context/RobotContext';
 
 import type { CollisionTarget } from '@react-three/rapier';
@@ -39,7 +38,7 @@ export default function BB8() {
   const dispatch = useRobotsDispatch();
   const { selfCamera } = useContext(CameraContext);
 
-  const robot = robots.find((robot) => robot.id === 1);
+  const robot = robots.find((robot) => robot.id === 2);
   const [init] = useState({ x: robot!.x, z: robot!.z });
 
   const rigidBodyRef = useRef<RapierRigidBody>(null);
@@ -55,11 +54,7 @@ export default function BB8() {
 
     const position = other.rigidBodyObject.position;
 
-    const { x, z, angle } = movement('collision', robot.x, robot.z, robot.angle, robot.id, {
-      x: position.x,
-      z: position.z,
-    });
-    dispatch({ ...robot, x, z, angle });
+    dispatch({ type: 'collision', payload: { id: robot.id, another: { x: position.x, z: position.z } } });
   };
 
   useFrame(({ clock }) => {
@@ -89,9 +84,10 @@ export default function BB8() {
       position={[init.x, 0.45, init.z]}
       scale={[0.8, 0.8, 0.8]}
     >
+      {selfCamera === 2 && <PerspectiveCamera makeDefault up={[0, 1, 0]} position={[0, 1.6, -0.8]} fov={60} near={0.01} far={100} />}
       <group dispose={null}>
         <group name="root">
-          {selfCamera && <PerspectiveCamera makeDefault position={[0, 2.5, 0]} fov={60} near={0.01} far={100} />}
+
           <group name="GLTF_SceneRootNode">
             <group name="Cuerpo_1" ref={rotativObject}>
               <mesh

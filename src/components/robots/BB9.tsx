@@ -1,13 +1,13 @@
 import * as THREE from "three";
-import { useRef, useState } from "react";
-import { useGLTF } from "@react-three/drei";
+import { useContext, useRef, useState } from "react";
+import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import { useRobots } from "../../context/RobotContext";
 import { useFrame } from "@react-three/fiber";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { CollisionTarget } from "@react-three/rapier";
-import { movement } from "../../utils/movement";
 import { useRobotsDispatch } from "../../context/RobotContext";
+import { CameraContext } from "../../context/CameraContext";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -39,10 +39,11 @@ export default function BB9() {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const rotative = useRef<THREE.Group | null>(null);
   const { nodes, materials } = useGLTF("/bb9.glb") as unknown as GLTFResult;
+  const { selfCamera } = useContext(CameraContext);
 
   const robots = useRobots();
   const dispatch = useRobotsDispatch();
-  const robot = robots.find((robot) => robot.id === 2);
+  const robot = robots.find((robot) => robot.id === 3);
   const [init] = useState({ x: robot!.x, z: robot!.z });
 
   const handleCollisionEnter = (other: CollisionTarget) => {
@@ -54,11 +55,7 @@ export default function BB9() {
 
     const position = other.rigidBodyObject.position;
 
-    const { x, z, angle } = movement("collision", robot.x, robot.z, robot.angle, robot.id, {
-      x: position.x,
-      z: position.z,
-    });
-    dispatch({ ...robot, x, z, angle });
+    dispatch({ type: 'collision', payload: { id: robot.id, another: { x: position.x, z: position.z } } });
   };
 
   useFrame(({ clock }) => {
@@ -81,69 +78,68 @@ export default function BB9() {
   });
 
   return (
-    <group>
-      <RigidBody
-        ref={rigidBodyRef}
-        colliders="hull"
-        onCollisionEnter={({ other }) => handleCollisionEnter(other)}
-        position={[init.x, -0.6, init.z]}
-      >
-        <group dispose={null}>
-          <group position={[0, 3.228, 0]} rotation={[-Math.PI / 2, 0, Math.PI]}>
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["Object002_01_-_Default_0_1"].geometry}
-              material={materials["01_-_Default"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["Object002_01_-_Default_0_2"].geometry}
-              material={materials["07_-_Default"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["Object002_01_-_Default_0_3"].geometry}
-              material={materials["02_-_Default"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["Object002_01_-_Default_0_4"].geometry}
-              material={materials["03_-_Default"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["Object002_01_-_Default_0_5"].geometry}
-              material={materials["08_-_Default"]}
-            />
-          </group>
-          <group position={[0, 1.674, 0]} ref={rotative}>
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["Sphere001_03_-_Default_0_1"].geometry}
-              material={materials["03_-_Default"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["Sphere001_03_-_Default_0_2"].geometry}
-              material={materials["01_-_Default"]}
-            />
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes["Sphere001_03_-_Default_0_3"].geometry}
-              material={materials["02_-_Default"]}
-            />
-          </group>
+    <RigidBody
+      ref={rigidBodyRef}
+      colliders="hull"
+      onCollisionEnter={({ other }) => handleCollisionEnter(other)}
+      position={[init.x, -0.6, init.z]}
+    >
+      {selfCamera === 3 && <PerspectiveCamera makeDefault position={[0, 3.8, -1]} fov={90} near={0.01} far={100} />}
+      <group dispose={null}>
+        <group position={[0, 3.228, 0]} rotation={[-Math.PI / 2, 0, Math.PI]}>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes["Object002_01_-_Default_0_1"].geometry}
+            material={materials["01_-_Default"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes["Object002_01_-_Default_0_2"].geometry}
+            material={materials["07_-_Default"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes["Object002_01_-_Default_0_3"].geometry}
+            material={materials["02_-_Default"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes["Object002_01_-_Default_0_4"].geometry}
+            material={materials["03_-_Default"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes["Object002_01_-_Default_0_5"].geometry}
+            material={materials["08_-_Default"]}
+          />
         </group>
-      </RigidBody>
-    </group>
+        <group position={[0, 1.674, 0]} ref={rotative}>
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes["Sphere001_03_-_Default_0_1"].geometry}
+            material={materials["03_-_Default"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes["Sphere001_03_-_Default_0_2"].geometry}
+            material={materials["01_-_Default"]}
+          />
+          <mesh
+            castShadow
+            receiveShadow
+            geometry={nodes["Sphere001_03_-_Default_0_3"].geometry}
+            material={materials["02_-_Default"]}
+          />
+        </group>
+      </group>
+    </RigidBody>
   );
 }
 

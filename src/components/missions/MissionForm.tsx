@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import type { ChangeEvent, SetStateAction, Dispatch } from 'react';
-import type { Mission, Robot } from '../../utils/types';
-import { useRobots } from '../../context/RobotContext';
+import type { Mission } from '../../utils/types';
 import { useMissionDispatch, useMissions } from '../../context/MissionContext';
 import { Xmark } from '../../utils/Icons';
 import { useCp } from '../../context/CpContext';
 
 export default function MissionForm({ setOpen }: { setOpen: Dispatch<SetStateAction<boolean>> }) {
-  const robots = useRobots();
   const cps = useCp();
   const missions = useMissions();
   const mission = missions.find((mission) => mission.selected);
@@ -50,24 +48,6 @@ export default function MissionForm({ setOpen }: { setOpen: Dispatch<SetStateAct
         <div className="absolute w-0 left-16 transition-all duration-300 ease-in-out border-slate-500 bottom-0 peer-focus:w-4/5 peer-focus:border-b" />
       </div>
 
-      <div className="flex relative w-full">
-        <label htmlFor="robot_id">Robot:</label>
-        <select
-          id="robot_id"
-          name="robot_id"
-          className="rounded-full  cursor-pointer bg-slate-300 dark:bg-slate-800 px-2 ml-2 opacity-90 hover:opacity-100 active:scale-90 shadow-sm shadow-slate-600 active:shadow-none transition-all"
-          onChange={onChange}
-          value={editMission.robot_id}
-        >
-          <option value={-1}>⤵ select robot</option>
-          {robots &&
-            robots.map((robot: Robot) => (
-              <option key={robot.id} value={robot.id}>
-                {robot.name}
-              </option>
-            ))}
-        </select>
-      </div>
       <div className="flex flex-col w-full">
         <button className="flex w-full justify-between items-center text-5xl">
           <span className="text-base">Add Check Point:</span>

@@ -1,21 +1,20 @@
 import { PerspectiveCamera, OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
-import { useRef, useEffect } from 'react';
-import * as THREE from 'three';
+import { useContext, useRef } from 'react';
+import { CameraContext } from '../../context/CameraContext';
 
-export default function MainCamera({ cameraRef }: { cameraRef: React.RefObject<THREE.PerspectiveCamera | null> }) {
+export default function MainCamera() {
   const controlsRef = useRef<OrbitControlsType | null>(null);
+  const { selfCamera } = useContext(CameraContext);
 
-  useEffect(() => {
-    if (cameraRef.current && controlsRef.current) {
-      controlsRef.current.object = cameraRef.current;
-    }
-  }, [cameraRef]);
-
-  return (
-    <>
-      <PerspectiveCamera ref={cameraRef} position={[0, 7, 20]} fov={60} near={0.1} far={1000} />
-      <OrbitControls ref={controlsRef} />
-    </>
-  );
+  if (selfCamera === 0) {
+    return (
+      <>
+        <PerspectiveCamera makeDefault={selfCamera === 0} position={[0, 10, 25]} fov={60} near={0.1} far={1000} />
+        <OrbitControls ref={controlsRef} />
+      </>
+    )
+  } else {
+    return null
+  }
 }
