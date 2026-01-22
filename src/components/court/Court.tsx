@@ -6,6 +6,7 @@ import Field from './Field';
 import { useRobots } from '../../context/RobotContext';
 import Robot from '../robots/Robot';
 import { Physics } from '@react-three/rapier';
+import { LidarPoints } from './LidarPoints';
 import MainCamera from './MainCamera';
 
 function MultiCameraRender({
@@ -57,20 +58,23 @@ export default function Court() {
         makeDefault={false}
       />
       <MultiCameraRender topCam={topCamera} />
+      <LidarPoints />
       <ambientLight intensity={2} />
       <directionalLight castShadow position={[40, 70, 30]} shadow-mapSize={[1024, 1024]} intensity={2}>
         <orthographicCamera attach="shadow-camera" args={[-30, 30, 30, -30]} />
       </directionalLight>
+
       <Suspense fallback={null}>
         <Physics gravity={[0, 0, 0]}>
           <Field />
           {robots &&
             robots.map((robot) => (
               <Suspense fallback={null} key={robot.id}>
-                <Robot robot={robot.name} />
+                <Robot key={robot.id} robot={robot.name} />
               </Suspense>
             ))}
         </Physics>
+
       </Suspense>
 
     </Canvas>

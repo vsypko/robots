@@ -11,7 +11,6 @@ export function robotReducer(
       return state.map((robot) => ({
         ...robot,
         selected: robot.id === select,
-        selfCamera: false,
       }));
     }
 
@@ -21,14 +20,6 @@ export function robotReducer(
       if (!robot) return state;
       const { x, z, angle } = movement(key, robot.x, robot.z, robot.angle, robot?.id);
       return state.map((robot) => (robot.selected || (id && robot.id === id) ? { ...robot, x, z, angle } : robot));
-    }
-
-    case 'selfCamera': {
-      const id = action.payload as number;
-      return state.map((robot) => ({
-        ...robot,
-        selfCamera: robot.id === id && !robot.selfCamera ? true : false,
-      }));
     }
 
     case 'collision': {

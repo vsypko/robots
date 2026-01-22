@@ -39,6 +39,8 @@ export default function BB8() {
   const robot = robots.find((robot) => robot.id === 2);
   const [init] = useState({ x: robot!.x, z: robot!.z });
 
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
+
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const rotativObject = useRef<THREE.Group>(null);
   const { nodes, materials } = useGLTF('/bb8.glb') as unknown as GLTFResult;
@@ -82,7 +84,7 @@ export default function BB8() {
       position={[init.x, 0.45, init.z]}
       scale={[0.8, 0.8, 0.8]}
     >
-      {robot?.selfCamera && <PerspectiveCamera makeDefault up={[0, 1, 0]} position={[0, 1.6, -0.8]} fov={60} near={0.01} far={100} />}
+      <PerspectiveCamera ref={cameraRef} makeDefault={robot?.selected} up={[0, 1, 0]} position={[0, 1.6, -0.8]} fov={60} near={0.01} far={100} />
       <group dispose={null}>
         <group name="root">
 

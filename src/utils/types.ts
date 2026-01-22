@@ -14,7 +14,6 @@ export type Robot = {
   z: number;
   angle: number;
   selected?: boolean;
-  selfCamera: boolean;
 };
 
 export type CheckPoint = {
@@ -50,7 +49,6 @@ export const initRobots: Robot[] = [
     z: 0.0,
     angle: Math.PI,
     selected: false,
-    selfCamera: false,
   },
   {
     id: 2,
@@ -59,7 +57,6 @@ export const initRobots: Robot[] = [
     z: 0.0,
     angle: Math.PI,
     selected: false,
-    selfCamera: false,
   },
   {
     id: 3,
@@ -68,6 +65,5 @@ export const initRobots: Robot[] = [
     z: 0.0,
     angle: Math.PI,
     selected: false,
-    selfCamera: false,
   },
 ];

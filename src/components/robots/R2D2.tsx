@@ -22,9 +22,11 @@ export default function R2D2() {
   const rigidBodyRef = useRef<RapierRigidBody | null>(null);
 
   //get robot data from context and rerender ---------------------------------
-  const robot = useRobots().find((robot) => Number(robot.id) === 1);
+  const robots = useRobots();
+  const robot = robots.find((robot) => Number(robot.id) === 1);
   const dispatch = useRobotsDispatch();
   const [init] = useState({ x: robot!.x, z: robot!.z });
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 
   const handleCollisionEnter = (other: CollisionTarget) => {
     if (!rigidBodyRef.current || !robot || !other.rigidBodyObject) return;
@@ -56,7 +58,7 @@ export default function R2D2() {
     >
 
       <group dispose={null}>
-        {robot?.selfCamera && <PerspectiveCamera makeDefault position={[0, 0.9, -0.08]} fov={60} near={0.01} far={100} />}
+        <PerspectiveCamera ref={cameraRef} makeDefault={robot?.selected} position={[0, 0.9, -0.08]} fov={60} near={0.01} far={100} />
         <mesh
           castShadow
           receiveShadow

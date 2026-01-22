@@ -43,6 +43,7 @@ export default function BB9() {
   const dispatch = useRobotsDispatch();
   const robot = robots.find((robot) => robot.id === 3);
   const [init] = useState({ x: robot!.x, z: robot!.z });
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 
   const handleCollisionEnter = (other: CollisionTarget) => {
     if (!rigidBodyRef.current || !robot || !other.rigidBodyObject) return;
@@ -82,7 +83,7 @@ export default function BB9() {
       onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       position={[init.x, -0.6, init.z]}
     >
-      {robot?.selfCamera && <PerspectiveCamera makeDefault position={[0, 3.8, -1]} fov={90} near={0.01} far={100} />}
+      <PerspectiveCamera ref={cameraRef} makeDefault={robot?.selected} position={[0, 3.8, -1]} fov={90} near={0.01} far={100} />
       <group dispose={null}>
         <group position={[0, 3.228, 0]} rotation={[-Math.PI / 2, 0, Math.PI]}>
           <mesh

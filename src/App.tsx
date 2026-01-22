@@ -1,4 +1,4 @@
-import CameraToggle from './components/controls/CameraToggle';
+// import CameraToggle from './components/controls/CameraToggle';
 import Joystick from './components/controls/Joystick';
 import Court from './components/court/Court';
 import { CheckPointsList } from './components/missions/CheckPointsList';
@@ -13,7 +13,7 @@ export default function App() {
           <RobotSelector />
           <CheckPointsList />
           <MissionsList />
-          <CameraToggle />
+          {/* <CameraToggle /> */}
         </div>
 
         <Joystick />
