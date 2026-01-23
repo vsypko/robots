@@ -1,109 +1,121 @@
-import * as THREE from 'three'
-import { useThree, useFrame } from '@react-three/fiber'
-import { Points } from '@react-three/drei'
-import { useMemo, useRef } from 'react'
+import * as THREE from "three"
+import { useFrame } from "@react-three/fiber"
+import { Points } from "@react-three/drei"
+import { useRapier } from "@react-three/rapier"
+import { useMemo, useRef } from "react"
+import { useRobots } from "../../context/RobotContext"
 
 type LidarProps = {
   maxDistance?: number
-  horizontalStepDeg?: number
-  verticalAnglesDeg?: number[]
-  frequencyHz?: number
+  fovDegHorizontal?: number
+  fovDegVertical?: number
+  horizontalResolution?: number
+  verticalResolution?: number
 }
 
 export function LidarPoints({
-  maxDistance = 15,
-  horizontalStepDeg = 1,
-  verticalAnglesDeg = [-40, -35, -30, -25, -20, -15, -10, -5, 0],
-  frequencyHz = 5,
+  maxDistance = 20,
+  fovDegHorizontal = 80,
+  fovDegVertical = 45,
+  horizontalResolution = 100,
+  verticalResolution = 40
 }: LidarProps) {
-  const { scene, camera } = useThree()
+  const { rapier, world } = useRapier()
 
-  const raycaster = useMemo(() => new THREE.Raycaster(), [])
   const pointsRef = useRef<THREE.Points>(null!)
+  const materialRef = useRef<THREE.PointsMaterial>(null!)
+  const frameCounterRef = useRef(0)
+  const robots = useRobots()
 
-  const maxPoints = useMemo(
-    () =>
-      verticalAnglesDeg.length *
-      Math.ceil(360 / horizontalStepDeg),
-    [verticalAnglesDeg, horizontalStepDeg]
-  )
+  const totalPoints = horizontalResolution * verticalResolution
+  const positions = useMemo(() => new Float32Array(totalPoints * 3), [totalPoints])
+  const colors = useMemo(() => new Float32Array(totalPoints * 3), [totalPoints])
 
-  const positions = useMemo(
-    () => new Float32Array(maxPoints * 3),
-    [maxPoints]
-  )
+  useFrame(({ camera }) => {
+    if (!pointsRef.current || !world || !rapier || !robots.some((r) => r.selected)) return
 
-  const objects = useMemo(
-    () => scene.children.filter(o => !o.userData?.isRobot),
-    [scene]
-  )
+    const geometry = pointsRef.current.geometry
 
-  const lastScanTime = useRef(0)
-  const scanInterval = 1 / frequencyHz
+    // Ensure camera's world matrix is up to date
+    camera.updateMatrixWorld(true)
 
-  useFrame(({ clock }) => {
-    if (clock.elapsedTime - lastScanTime.current < scanInterval) return
-    lastScanTime.current = clock.elapsedTime
+    const origin = new THREE.Vector3()
+    const quaternion = new THREE.Quaternion()
+    camera.getWorldPosition(origin)
+    camera.getWorldQuaternion(quaternion)
+
+    const halfFovRadHorizontal = THREE.MathUtils.degToRad(fovDegHorizontal / 2)
+    const halfFovRadVertical = THREE.MathUtils.degToRad(fovDegVertical / 2)
+    const tanHalfFovHorizontal = Math.tan(halfFovRadHorizontal)
+    const tanHalfFovVertical = Math.tan(halfFovRadVertical)
 
     let idx = 0
 
-    const origin = new THREE.Vector3()
-    camera.getWorldPosition(origin)
+    // Only cast rays every 10th frame
+    if (frameCounterRef.current % 10 === 0) {
+      for (let y = 0; y < verticalResolution; y++) {
+        for (let x = 0; x < horizontalResolution; x++) {
+          const u = (x / (horizontalResolution - 1)) * 2 - 1
+          const v = (y / (verticalResolution - 1)) * 2 - 1 - 0.5
 
-    for (const pitchDeg of verticalAnglesDeg) {
-      const pitch = THREE.MathUtils.degToRad(pitchDeg)
+          const dir = new THREE.Vector3(u * tanHalfFovHorizontal, v * tanHalfFovVertical, -1).normalize()
+          dir.applyQuaternion(quaternion)
 
-      for (
-        let yawDeg = 0;
-        yawDeg < 360;
-        yawDeg += horizontalStepDeg
-      ) {
-        const yaw = THREE.MathUtils.degToRad(yawDeg)
+          const ray = new rapier.Ray({ x: origin.x, y: origin.y, z: origin.z }, { x: dir.x, y: dir.y, z: dir.z })
 
-        const dir = new THREE.Vector3(
-          Math.cos(pitch) * Math.cos(yaw),
-          Math.sin(pitch),
-          Math.cos(pitch) * Math.sin(yaw)
-        )
+          const hit = world.castRay(ray, maxDistance, true)
 
-        dir.applyQuaternion(camera.quaternion).normalize()
+          let distance: number
+          let p: { x: number; y: number; z: number }
 
-        raycaster.far = maxDistance
-        raycaster.set(origin, dir)
+          if (hit) {
+            distance = hit.timeOfImpact
+            p = ray.pointAt(distance)
+          } else {
+            // No hit - place point at max distance
+            distance = maxDistance
+            p = ray.pointAt(maxDistance)
+          }
 
-        const intersects = raycaster.intersectObjects(objects, true)
+          // Calculate color gradient from green (0x00FF00) at distance 1 to blue (0x0000FF) at distance 20
+          const minDist = 1
+          const t = Math.max(0, Math.min(1, (distance - minDist) / (maxDistance - minDist)))
+          const r = 0
+          const g = 1 - t // Green: 1 at distance 1, 0 at distance 20
+          const b = t // Blue: 0 at distance 1, 1 at distance 20
 
-        // if (intersects.length > 0) {
-        //   const p = intersects[0].point
-        //   positions[idx++] = p.x
-        //   positions[idx++] = p.y
-        //   positions[idx++] = p.z
-        // }
-        const p =
-          intersects[0]?.point ??
-          origin.clone().add(dir.clone().multiplyScalar(maxDistance))
+          positions[idx] = p.x
+          positions[idx + 1] = p.y
+          positions[idx + 2] = p.z
 
-        positions[idx++] = p.x
-        positions[idx++] = p.y
-        positions[idx++] = p.z
+          colors[idx] = r
+          colors[idx + 1] = g
+          colors[idx + 2] = b
 
+          idx += 3
+        }
+      }
+
+      const count = idx / 3
+      geometry.setDrawRange(0, count)
+      geometry.attributes.position.needsUpdate = true
+
+      if (!geometry.attributes.color) {
+        geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3))
+      } else {
+        // Update the color data directly
+        const colorAttribute = geometry.attributes.color as THREE.BufferAttribute
+        colorAttribute.array = colors
+        colorAttribute.needsUpdate = true
       }
     }
 
-    const geometry = pointsRef.current.geometry
-    geometry.setDrawRange(0, idx / 3)
-    geometry.attributes.position.needsUpdate = true
+    frameCounterRef.current++
   })
 
   return (
-    <Points ref={pointsRef} positions={positions} stride={3}>
-      <pointsMaterial
-        transparent
-        color={0x00ff00}
-        size={0.1}
-        sizeAttenuation
-        depthWrite={false}
-      />
+    <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
+      <pointsMaterial ref={materialRef} size={0.1} sizeAttenuation vertexColors depthWrite={false} />
     </Points>
   )
 }
