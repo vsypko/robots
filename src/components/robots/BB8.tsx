@@ -1,14 +1,15 @@
 import * as THREE from "three";
-import { useMemo, useRef } from "react";
+import { useCallback, useRef } from "react";
 // import { useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 
-import { useRobotsDispatch } from "../../context/RobotContext";
+// import { useRobotsDispatch } from "../../context/RobotContext";
 
-import type { CollisionTarget } from "@react-three/rapier";
+// import type { CollisionTarget } from "@react-three/rapier";
 import type { GLTF } from "three-stdlib";
 import type { Robot } from "../../utils/types";
+import { useRegister } from "../controls/Register";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -33,29 +34,27 @@ type GLTFResult = GLTF & {
 // };
 
 export default function BB8({ robot }: { robot: Robot }) {
-  const dispatch = useRobotsDispatch();
+  // const dispatch = useRobotsDispatch();
 
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
-  const { x, y, z, angle } = robot;
+  const { x, y, z } = robot;
 
-  const rigidBodyRef = useRef<RapierRigidBody>(null);
-  const rotativObject = useRef<THREE.Group>(null);
   const { nodes, materials } = useGLTF("/bb8.glb") as unknown as GLTFResult;
 
-  const handleCollisionEnter = (other: CollisionTarget) => {
-    if (!rigidBodyRef.current || !robot || !other.rigidBodyObject) return;
-    rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
-    rigidBodyRef.current.setRotation({ x: 0, y: 0, z: 0, w: 1 }, true);
-    rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
-    rigidBodyRef.current.setTranslation({ x: 0, y: 0, z: 0 }, true);
+  // const handleCollisionEnter = (other: CollisionTarget) => {
+  //   if (!rigidBodyRef.current || !robot || !other.rigidBodyObject) return;
+  //   rigidBodyRef.current.setLinvel({ x: 0, y: 0, z: 0 }, true);
+  //   rigidBodyRef.current.setRotation({ x: 0, y: 0, z: 0, w: 1 }, true);
+  //   rigidBodyRef.current.setAngvel({ x: 0, y: 0, z: 0 }, true);
+  //   rigidBodyRef.current.setTranslation({ x: 0, y: 0, z: 0 }, true);
 
-    const position = other.rigidBodyObject.position;
+  //   const position = other.rigidBodyObject.position;
 
-    dispatch({
-      type: "collision",
-      payload: { id: robot.id, another: { x: position.x, y: position.y, z: position.z } }
-    });
-  };
+  //   dispatch({
+  //     type: "collision",
+  //     payload: { id: robot.id, another: { x: position.x, y: position.y, z: position.z } }
+  //   });
+  // };
 
   // useFrame(({ clock }) => {
   //   if (!rotativObject.current || !rigidBodyRef.current || !robot) return;
@@ -76,18 +75,23 @@ export default function BB8({ robot }: { robot: Robot }) {
   //   rigidBodyRef.current.setTranslation({ x: robot.x, y: robot.y, z: robot.z }, true);
   // });
 
-  const position = useMemo(() => new THREE.Vector3(x, y, z), [x, y, z]);
+  const { objectRegister } = useRegister();
 
-  const originRotation = useMemo(
-    () => new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 0, angle, "ZYX")),
-    [angle]
+  const setObjectRef = useCallback(
+    (object: RapierRigidBody | THREE.Group | null, rotative: boolean) => {
+      if (!object) return;
+      const key = rotative ? `${robot.id}-rotative` : `${robot.id}`;
+
+      objectRegister({ current: object }, key);
+    },
+    [objectRegister, robot.id]
   );
 
   return (
     <RigidBody
-      ref={rigidBodyRef}
+      ref={(object) => setObjectRef(object, false)}
       colliders="hull"
-      onCollisionEnter={({ other }) => handleCollisionEnter(other)}
+      // onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       position={[x, y, z]}
     >
       <group dispose={null}>
@@ -102,7 +106,7 @@ export default function BB8({ robot }: { robot: Robot }) {
         />
         <group name="root" scale={[0.8, 0.8, 0.8]}>
           <group name="GLTF_SceneRootNode">
-            <group name="Cuerpo_1" ref={rotativObject}>
+            <group name="Cuerpo_1" ref={(object) => setObjectRef(object, true)}>
               <mesh
                 name="Object_4"
                 castShadow

@@ -1,17 +1,17 @@
-import type { ChangeEvent } from 'react';
-import { useRobots, useRobotsDispatch } from '../../context/RobotContext';
-import type { Robot } from '../../utils/types';
+import type { ChangeEvent } from "react";
+import { useRobots, useRobotsDispatch } from "../../context/RobotContext";
+import type { Robot } from "../../utils/types";
 
 export default function RobotSelector() {
   const robots = useRobots();
   const id = robots.find((robot) => robot.selected)?.id;
   const dispatch = useRobotsDispatch();
   function onChange(event: ChangeEvent<HTMLSelectElement>) {
-    dispatch({ type: 'select', payload: Number(event.currentTarget.value) });
+    dispatch({ type: "select", payload: Number(event.currentTarget.value) });
   }
 
   return (
-    <div className="flex relative w-full text-slate-50 mt-2 ml-2">
+    <div className="flex relative w-full text-slate-50">
       <label htmlFor="robot_id">Robot:</label>
       <select
         id="robot_id"

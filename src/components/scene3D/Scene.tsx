@@ -8,7 +8,7 @@ import Robot from "../robots/Robot";
 import { Physics } from "@react-three/rapier";
 import { LidarPoints } from "./LidarPoints";
 import MainCamera from "./MainCamera";
-import { useSettings } from "../../context/useSettings";
+import useSettings from "../../context/useSettings";
 
 function MultiCameraRender({
   topCam,

@@ -87,3 +87,13 @@ export const initSettings: SettingsType = {
   map: true,
   setMap: () => {}
 };
+
+export type MotionType = {
+  linear_velocity: number;
+  angular_velocity: number;
+};
+
+export const initMotion: MotionType = {
+  linear_velocity: 0,
+  angular_velocity: 0
+};
