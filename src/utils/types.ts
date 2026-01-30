@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+
 export type Mission = {
   id: number;
   name: string;
@@ -25,45 +27,59 @@ export type CheckPoint = {
 };
 
 export const initCp: CheckPoint = {
-  name: '',
+  name: "",
   selected: true,
   x: 0.0,
   z: 0.0,
-  angle: 3.14,
+  angle: 3.14
 };
 
 export const initMission: Mission = {
   id: 0,
-  name: '',
+  name: "",
   checkPoints: [],
   robot_id: 0,
   active: false,
-  selected: true,
+  selected: true
 };
 
 export const initRobots: Robot[] = [
   {
     id: 1,
-    name: 'R2D2',
+    name: "R2D2",
     x: -5.0,
     z: 0.0,
     angle: Math.PI,
-    selected: false,
+    selected: false
   },
   {
     id: 2,
-    name: 'BB8',
+    name: "BB8",
     x: 0.0,
     z: 0.0,
     angle: Math.PI,
-    selected: false,
+    selected: false
   },
   {
     id: 3,
-    name: 'BB9',
+    name: "BB9",
     x: 5.0,
     z: 0.0,
     angle: Math.PI,
-    selected: false,
-  },
+    selected: false
+  }
 ];
+
+export type SettingsType = {
+  light: boolean;
+  setLight: Dispatch<SetStateAction<boolean>>;
+  map: boolean;
+  setMap: Dispatch<SetStateAction<boolean>>;
+};
+
+export const initSettings: SettingsType = {
+  light: true,
+  setLight: () => {},
+  map: true,
+  setMap: () => {}
+};
