@@ -16,7 +16,7 @@ export default function Toggle<T>({
   return (
     <button
       className={`flex px-2 ${
-        value ? "bg-slate-800" : "bg-yellow-600"
+        !value ? "bg-slate-800" : "bg-yellow-600"
       } text-white rounded-full hover:opacity-90 active:scale-90 transition-all`}
       onClick={handleClick}
     >
