@@ -6,7 +6,10 @@ import { robotReducer } from "./robotReducer";
 
 const RobotContext = createContext<Robot[]>(initRobots);
 const RobotDispatchContext = createContext<
-  | Dispatch<{ type: string; payload: number | { key?: string; id?: number; another?: { x: number; z: number } } }>
+  | Dispatch<{
+      type: string;
+      payload: number | { key?: string; id?: number; another?: { x: number; y: number; z: number } };
+    }>
   | undefined
 >(undefined);
 

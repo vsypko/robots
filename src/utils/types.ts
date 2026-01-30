@@ -13,6 +13,7 @@ export type Robot = {
   id: number;
   name: string;
   x: number;
+  y: number;
   z: number;
   angle: number;
   selected?: boolean;
@@ -48,6 +49,7 @@ export const initRobots: Robot[] = [
     id: 1,
     name: "R2D2",
     x: -5.0,
+    y: -0.55,
     z: 0.0,
     angle: Math.PI,
     selected: false
@@ -56,6 +58,7 @@ export const initRobots: Robot[] = [
     id: 2,
     name: "BB8",
     x: 0.0,
+    y: 0.45,
     z: 0.0,
     angle: Math.PI,
     selected: false
@@ -64,6 +67,7 @@ export const initRobots: Robot[] = [
     id: 3,
     name: "BB9",
     x: 5.0,
+    y: -0.6,
     z: 0.0,
     angle: Math.PI,
     selected: false
