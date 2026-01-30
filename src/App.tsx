@@ -1,7 +1,7 @@
 // import CameraToggle from './components/controls/CameraToggle';
 import Joystick from "./components/controls/Joystick";
 import Toggle from "./components/controls/Toggle";
-import Court from "./components/court/Court";
+import Scene from "./components/scene3D/Scene";
 import { CheckPointsList } from "./components/missions/CheckPointsList";
 import { MissionsList } from "./components/missions/MissionsList";
 import RobotSelector from "./components/missions/RobotSelector";
@@ -25,7 +25,7 @@ export default function App() {
         <Joystick />
       </div>
       <div className="w-full md:w-4/5 h-full rounded-2xl border-slate-800 dark:border-slate-200 border overflow-hidden">
-        <Court />
+        <Scene />
       </div>
     </div>
   );

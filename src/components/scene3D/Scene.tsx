@@ -77,7 +77,7 @@ export default function Court() {
           {robots &&
             robots.map((robot) => (
               <Suspense fallback={null} key={robot.id}>
-                <Robot key={robot.id} robot={robot.name} />
+                <Robot robot={robot} />
               </Suspense>
             ))}
           <LidarPoints />

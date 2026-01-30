@@ -3,10 +3,10 @@ import { useRef, useState } from "react";
 import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import { useFrame } from "@react-three/fiber";
-import { useRobots } from "../../context/RobotContext";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { CollisionTarget } from "@react-three/rapier";
 import { useRobotsDispatch } from "../../context/RobotContext";
+import type { Robot } from "../../utils/types";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -17,13 +17,12 @@ type GLTFResult = GLTF & {
   };
 };
 
-export default function R2D2() {
+export default function R2D2({ robot }: { robot: Robot }) {
   const { nodes, materials } = useGLTF("/r2d2.glb") as unknown as GLTFResult;
   const rigidBodyRef = useRef<RapierRigidBody | null>(null);
 
   //get robot data from context and rerender ---------------------------------
-  const robots = useRobots();
-  const robot = robots.find((robot) => Number(robot.id) === 1);
+
   const dispatch = useRobotsDispatch();
   const [init] = useState({ x: robot!.x, y: robot!.y, z: robot!.z });
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);

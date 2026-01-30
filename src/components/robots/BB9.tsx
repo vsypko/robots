@@ -2,11 +2,11 @@ import * as THREE from "three";
 import { useRef, useState } from "react";
 import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
-import { useRobots } from "../../context/RobotContext";
 import { useFrame } from "@react-three/fiber";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { CollisionTarget } from "@react-three/rapier";
 import { useRobotsDispatch } from "../../context/RobotContext";
+import type { Robot } from "../../utils/types";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -34,14 +34,13 @@ const isCloseToZero = (value: number): boolean => {
   return Math.abs(value) < TOLERANCE;
 };
 
-export default function BB9() {
+export default function BB9({ robot }: { robot: Robot }) {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const rotative = useRef<THREE.Group | null>(null);
   const { nodes, materials } = useGLTF("/bb9.glb") as unknown as GLTFResult;
 
-  const robots = useRobots();
   const dispatch = useRobotsDispatch();
-  const robot = robots.find((robot) => robot.id === 3);
+
   const [init] = useState({ x: robot!.x, y: robot!.y, z: robot!.z });
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 

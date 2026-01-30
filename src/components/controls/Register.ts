@@ -1,18 +1,19 @@
 import { useCallback } from "react";
 import { Group } from "three";
 import type { RefObject } from "react";
+import type { RapierRigidBody } from "@react-three/rapier";
 
 // Define internal registries.
 
-const rotative = new Map<string, RefObject<Group>>();
+const objects = new Map<string, RefObject<RapierRigidBody | Group>>();
 // const moveable = new Map<string, RefObject<Group>>();
 
 // Registration hook.
 
 export function useRegistry() {
   // Rotative parts registry
-  const registerRotative = useCallback((groupRef: RefObject<Group>, key: string) => {
-    rotative.set(key, groupRef);
+  const registerRotative = useCallback((objectRef: RefObject<RapierRigidBody | Group>, key: string) => {
+    objects.set(key, objectRef);
   }, []);
 
   // Collision part registry
@@ -28,7 +29,7 @@ export function useRegistry() {
 
   // Cleanup function for unmount event
   const clearRegistry = useCallback(() => {
-    rotative.clear();
+    objects.clear();
     // collisionParts.clear();
   }, []);
 
@@ -41,5 +42,5 @@ export function useRegistry() {
 
 // Read acces.
 
-export const getRotative = () => rotative;
+export const getRotative = () => objects;
 // export const getCollisionParts = () => collisionParts;
