@@ -29,7 +29,7 @@ export default function MainCamera() {
         position={INITIAL_POSITION}
         fov={60}
         near={0.1}
-        far={100}
+        far={1000}
       />
       {isMainCamera && <OrbitControls ref={controlsRef} camera={mainCamRef.current!} makeDefault={isMainCamera} />}
     </>

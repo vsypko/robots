@@ -1,12 +1,12 @@
-import * as THREE from "three";
-import { useRef, useState } from "react";
-import { PerspectiveCamera, useGLTF } from "@react-three/drei";
-import type { GLTF } from "three-stdlib";
-import { useFrame } from "@react-three/fiber";
-import { RapierRigidBody, RigidBody } from "@react-three/rapier";
-import type { CollisionTarget } from "@react-three/rapier";
-import { useRobotsDispatch } from "../../context/RobotContext";
-import type { Robot } from "../../utils/types";
+import * as THREE from 'three';
+import { useRef, useState } from 'react';
+import { PerspectiveCamera, useGLTF } from '@react-three/drei';
+import type { GLTF } from 'three-stdlib';
+import { useFrame } from '@react-three/fiber';
+import { RapierRigidBody, RigidBody } from '@react-three/rapier';
+import type { CollisionTarget } from '@react-three/rapier';
+import { useRobotsDispatch } from '../../context/RobotContext';
+import type { Robot } from '../../utils/types';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -18,7 +18,7 @@ type GLTFResult = GLTF & {
 };
 
 export default function R2D2({ robot }: { robot: Robot }) {
-  const { nodes, materials } = useGLTF("/r2d2.glb") as unknown as GLTFResult;
+  const { nodes, materials } = useGLTF('/r2d2.glb') as unknown as GLTFResult;
   const rigidBodyRef = useRef<RapierRigidBody | null>(null);
 
   //get robot data from context and rerender ---------------------------------
@@ -37,8 +37,8 @@ export default function R2D2({ robot }: { robot: Robot }) {
     const position = other.rigidBodyObject.position;
 
     dispatch({
-      type: "collision",
-      payload: { id: robot.id, another: { x: position.x, y: position.y, z: position.z } }
+      type: 'collision',
+      payload: { id: robot.id, another: { x: position.x, y: position.y, z: position.z } },
     });
   };
 
@@ -54,8 +54,14 @@ export default function R2D2({ robot }: { robot: Robot }) {
     <RigidBody
       ref={rigidBodyRef}
       colliders="hull"
-      onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       position={[init.x, init.y, init.z]}
+      enabledTranslations={[true, false, true]}
+      enabledRotations={[false, true, false]}
+      restitution={0}
+      friction={1.8}
+      linearDamping={3}
+      angularDamping={4}
+      mass={5}
     >
       <group dispose={null}>
         <PerspectiveCamera
@@ -80,4 +86,4 @@ export default function R2D2({ robot }: { robot: Robot }) {
   );
 }
 
-useGLTF.preload("/r2d2.glb");
+useGLTF.preload('/r2d2.glb');

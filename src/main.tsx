@@ -6,6 +6,7 @@ import { RobotProvider } from "./context/RobotContext.tsx";
 import { MissionProvider } from "./context/MissionContext.tsx";
 import { CpProvider } from "./context/CpContext.tsx";
 import { SettingsProvider } from "./context/SettingsContext.tsx";
+import { JoystickProvider } from "./context/JoystickContext.tsx";
 
 if (
   localStorage.theme === "dark" ||
@@ -22,7 +23,9 @@ createRoot(document.getElementById("root")!).render(
       <RobotProvider>
         <CpProvider>
           <MissionProvider>
-            <App />
+            <JoystickProvider>
+              <App />
+            </JoystickProvider>
           </MissionProvider>
         </CpProvider>
       </RobotProvider>

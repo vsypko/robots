@@ -1,18 +1,19 @@
-import { Suspense, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrthographicCamera } from "@react-three/drei";
-import type { OrthographicCamera as OrthographicCameraType } from "three";
-import Field from "./Field";
-import { useRobots } from "../../context/RobotContext";
-import Robot from "../robots/Robot";
-import { Physics } from "@react-three/rapier";
-import { LidarPoints } from "./LidarPoints";
-import MainCamera from "./MainCamera";
-import useSettings from "../../context/useSettings";
+import { Suspense, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrthographicCamera } from '@react-three/drei';
+import type { OrthographicCamera as OrthographicCameraType } from 'three';
+import Field from './Field';
+import { useRobots } from '../../context/RobotContext';
+import Robot from '../robots/Robot';
+import { Physics } from '@react-three/rapier';
+import { LidarPoints } from './LidarPoints';
+import MainCamera from './MainCamera';
+import useSettings from '../../context/useSettings';
+import FrameEngine from '../controls/FrameEngine';
 
 function MultiCameraRender({
   topCam,
-  miniSize = 300
+  miniSize = 300,
 }: {
   topCam: React.RefObject<OrthographicCameraType | null>;
   miniSize?: number;
@@ -20,10 +21,10 @@ function MultiCameraRender({
   const { map } = useSettings();
 
   useFrame(({ gl, size, scene, camera }) => {
-    const height = size.height;
+    const { width, height } = size;
     gl.autoClear = false;
-    gl.setViewport(0, 0, size.width, size.height);
-    gl.setScissor(0, 0, size.width, size.height);
+    gl.setViewport(0, 0, width, height);
+    gl.setScissor(0, 0, width, height);
     gl.render(scene, camera);
 
     gl.clearDepth();
@@ -53,7 +54,7 @@ export default function Court() {
       <MainCamera />
       <OrthographicCamera
         ref={topCamera}
-        position={[0, 10, 0]}
+        position={[0, 2, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
         left={-20}
         right={20}
@@ -72,16 +73,19 @@ export default function Court() {
         </group>
       )}
       <Suspense fallback={null}>
-        <Physics gravity={[0, 0, 0]}>
-          <Field />
-          {robots &&
-            robots.map((robot) => (
-              <Suspense fallback={null} key={robot.id}>
-                <Robot robot={robot} />
-              </Suspense>
-            ))}
-          <LidarPoints />
-        </Physics>
+        <Suspense fallback={null}>
+          <Physics gravity={[0, 0, 0]}>
+            <Field />
+            {robots &&
+              robots.map((robot) => (
+                <Suspense fallback={null} key={robot.id}>
+                  <Robot robot={robot} />
+                </Suspense>
+              ))}
+            <LidarPoints />
+            <FrameEngine />
+          </Physics>
+        </Suspense>
       </Suspense>
     </Canvas>
   );

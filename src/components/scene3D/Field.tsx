@@ -25,8 +25,8 @@ export default function Field() {
         <RigidBody type="fixed" restitution={0} colliders="trimesh">
           <mesh castShadow receiveShadow geometry={nodes.Cube_2.geometry} material={materials["Material.001"]} />
         </RigidBody>
-      </group>
-    </group>
+      </group >
+    </group >
   )
 }
 

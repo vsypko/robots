@@ -1,30 +1,30 @@
-import * as THREE from "three";
-import { useRef, useState } from "react";
-import { PerspectiveCamera, useGLTF } from "@react-three/drei";
-import type { GLTF } from "three-stdlib";
-import { useFrame } from "@react-three/fiber";
-import { RapierRigidBody, RigidBody } from "@react-three/rapier";
-import type { CollisionTarget } from "@react-three/rapier";
-import { useRobotsDispatch } from "../../context/RobotContext";
-import type { Robot } from "../../utils/types";
+import * as THREE from 'three';
+import { useRef, useState } from 'react';
+import { PerspectiveCamera, useGLTF } from '@react-three/drei';
+import type { GLTF } from 'three-stdlib';
+import { useFrame } from '@react-three/fiber';
+import { RapierRigidBody, RigidBody } from '@react-three/rapier';
+import type { CollisionTarget } from '@react-three/rapier';
+import { useRobotsDispatch } from '../../context/RobotContext';
+import type { Robot } from '../../utils/types';
 
 type GLTFResult = GLTF & {
   nodes: {
-    ["Object002_01_-_Default_0_1"]: THREE.Mesh;
-    ["Object002_01_-_Default_0_2"]: THREE.Mesh;
-    ["Object002_01_-_Default_0_3"]: THREE.Mesh;
-    ["Object002_01_-_Default_0_4"]: THREE.Mesh;
-    ["Object002_01_-_Default_0_5"]: THREE.Mesh;
-    ["Sphere001_03_-_Default_0_1"]: THREE.Mesh;
-    ["Sphere001_03_-_Default_0_2"]: THREE.Mesh;
-    ["Sphere001_03_-_Default_0_3"]: THREE.Mesh;
+    ['Object002_01_-_Default_0_1']: THREE.Mesh;
+    ['Object002_01_-_Default_0_2']: THREE.Mesh;
+    ['Object002_01_-_Default_0_3']: THREE.Mesh;
+    ['Object002_01_-_Default_0_4']: THREE.Mesh;
+    ['Object002_01_-_Default_0_5']: THREE.Mesh;
+    ['Sphere001_03_-_Default_0_1']: THREE.Mesh;
+    ['Sphere001_03_-_Default_0_2']: THREE.Mesh;
+    ['Sphere001_03_-_Default_0_3']: THREE.Mesh;
   };
   materials: {
-    ["01_-_Default"]: THREE.MeshStandardMaterial;
-    ["07_-_Default"]: THREE.MeshStandardMaterial;
-    ["02_-_Default"]: THREE.MeshStandardMaterial;
-    ["03_-_Default"]: THREE.MeshStandardMaterial;
-    ["08_-_Default"]: THREE.MeshStandardMaterial;
+    ['01_-_Default']: THREE.MeshStandardMaterial;
+    ['07_-_Default']: THREE.MeshStandardMaterial;
+    ['02_-_Default']: THREE.MeshStandardMaterial;
+    ['03_-_Default']: THREE.MeshStandardMaterial;
+    ['08_-_Default']: THREE.MeshStandardMaterial;
   };
 };
 
@@ -37,7 +37,7 @@ const isCloseToZero = (value: number): boolean => {
 export default function BB9({ robot }: { robot: Robot }) {
   const rigidBodyRef = useRef<RapierRigidBody>(null);
   const rotative = useRef<THREE.Group | null>(null);
-  const { nodes, materials } = useGLTF("/bb9.glb") as unknown as GLTFResult;
+  const { nodes, materials } = useGLTF('/bb9.glb') as unknown as GLTFResult;
 
   const dispatch = useRobotsDispatch();
 
@@ -54,8 +54,8 @@ export default function BB9({ robot }: { robot: Robot }) {
     const position = other.rigidBodyObject.position;
 
     dispatch({
-      type: "collision",
-      payload: { id: robot.id, another: { x: position.x, y: position.y, z: position.z } }
+      type: 'collision',
+      payload: { id: robot.id, another: { x: position.x, y: position.y, z: position.z } },
     });
   };
 
@@ -82,8 +82,14 @@ export default function BB9({ robot }: { robot: Robot }) {
     <RigidBody
       ref={rigidBodyRef}
       colliders="hull"
-      onCollisionEnter={({ other }) => handleCollisionEnter(other)}
       position={[init.x, init.y, init.z]}
+      enabledTranslations={[true, false, true]}
+      enabledRotations={[false, true, false]}
+      restitution={0}
+      friction={1.8}
+      linearDamping={3}
+      angularDamping={4}
+      mass={7}
     >
       <group dispose={null}>
         <PerspectiveCamera
@@ -99,52 +105,52 @@ export default function BB9({ robot }: { robot: Robot }) {
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes["Object002_01_-_Default_0_1"].geometry}
-            material={materials["01_-_Default"]}
+            geometry={nodes['Object002_01_-_Default_0_1'].geometry}
+            material={materials['01_-_Default']}
           />
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes["Object002_01_-_Default_0_2"].geometry}
-            material={materials["07_-_Default"]}
+            geometry={nodes['Object002_01_-_Default_0_2'].geometry}
+            material={materials['07_-_Default']}
           />
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes["Object002_01_-_Default_0_3"].geometry}
-            material={materials["02_-_Default"]}
+            geometry={nodes['Object002_01_-_Default_0_3'].geometry}
+            material={materials['02_-_Default']}
           />
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes["Object002_01_-_Default_0_4"].geometry}
-            material={materials["03_-_Default"]}
+            geometry={nodes['Object002_01_-_Default_0_4'].geometry}
+            material={materials['03_-_Default']}
           />
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes["Object002_01_-_Default_0_5"].geometry}
-            material={materials["08_-_Default"]}
+            geometry={nodes['Object002_01_-_Default_0_5'].geometry}
+            material={materials['08_-_Default']}
           />
         </group>
         <group position={[0, 1.674, 0]} ref={rotative}>
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes["Sphere001_03_-_Default_0_1"].geometry}
-            material={materials["03_-_Default"]}
+            geometry={nodes['Sphere001_03_-_Default_0_1'].geometry}
+            material={materials['03_-_Default']}
           />
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes["Sphere001_03_-_Default_0_2"].geometry}
-            material={materials["01_-_Default"]}
+            geometry={nodes['Sphere001_03_-_Default_0_2'].geometry}
+            material={materials['01_-_Default']}
           />
           <mesh
             castShadow
             receiveShadow
-            geometry={nodes["Sphere001_03_-_Default_0_3"].geometry}
-            material={materials["02_-_Default"]}
+            geometry={nodes['Sphere001_03_-_Default_0_3'].geometry}
+            material={materials['02_-_Default']}
           />
         </group>
       </group>
@@ -152,4 +158,4 @@ export default function BB9({ robot }: { robot: Robot }) {
   );
 }
 
-useGLTF.preload("/bb9.glb");
+useGLTF.preload('/bb9.glb');
