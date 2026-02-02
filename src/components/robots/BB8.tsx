@@ -1,9 +1,10 @@
-import { PerspectiveCamera, useGLTF } from '@react-three/drei';
-import { RapierRigidBody, RigidBody, type CollisionEnterPayload } from '@react-three/rapier';
-import type { GLTF } from 'three-stdlib';
-import type { Robot } from '../../utils/types';
-import { useRegister } from '../controls/engineRegister';
-import type { Group, Mesh, MeshStandardMaterial } from 'three';
+import { PerspectiveCamera, useGLTF } from "@react-three/drei";
+import { RapierRigidBody, RigidBody } from "@react-three/rapier";
+import type { GLTF } from "three-stdlib";
+import type { Robot } from "../../utils/types";
+import { useRegister } from "../controls/engineRegister";
+import type { Group, Mesh, MeshStandardMaterial } from "three";
+import useSettings from "../../context/useSettings";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -15,59 +16,34 @@ type GLTFResult = GLTF & {
 
   materials: {
     Material: MeshStandardMaterial;
-    ['Material.001']: MeshStandardMaterial;
+    ["Material.001"]: MeshStandardMaterial;
     lentes: MeshStandardMaterial;
     plastico: MeshStandardMaterial;
   };
 };
 
 export default function BB8({ robot }: { robot: Robot }) {
-  const { nodes, materials } = useGLTF('/bb8.glb') as unknown as GLTFResult;
+  const { nodes, materials } = useGLTF("/bb8.glb") as unknown as GLTFResult;
   const { robotRegister } = useRegister();
-
-  const handleCollision = (e: CollisionEnterPayload) => {
-    const target = e.target.rigidBody as unknown as RapierRigidBody;
-    const other = e.other.rigidBody as unknown as RapierRigidBody;
-
-    if (!target || !other) return;
-
-    const t = target.translation();
-    const o = other.translation();
-
-    const dir = {
-      x: t.x - o.x,
-      z: t.z - o.z,
-    };
-
-    const len = Math.hypot(dir.x, dir.z);
-    if (len === 0) return;
-
-    dir.x /= len;
-    dir.z /= len;
-
-    // const strength = 0.8;
-
-    target.applyImpulse({ x: dir.x, y: 0, z: dir.z }, true);
-    other.applyImpulse({ x: dir.x, y: 0, z: dir.z }, true);
-  };
+  const { selected } = useSettings();
 
   return (
     <RigidBody
-      ref={(object: RapierRigidBody) => robotRegister(object, false, robot.name)}
+      ref={(object: RapierRigidBody) => robotRegister(object, "base", robot.name)}
+      type="dynamic"
       colliders="hull"
       position={[robot.x, robot.y, robot.z]}
       rotation={[0, robot.angle, 0]}
-      enabledTranslations={[true, false, true]}
       enabledRotations={[false, true, false]}
-      restitution={0}
-      friction={1.8}
-      linearDamping={3}
-      angularDamping={4}
+      restitution={0.1}
+      friction={1}
+      linearDamping={1}
+      angularDamping={1.0}
       mass={5}
     >
       <group dispose={null}>
         <PerspectiveCamera
-          makeDefault={robot?.selected}
+          makeDefault={selected === robot.name}
           up={[0, 1, 0]}
           position={[0, 1.6, -0.6]}
           fov={60}
@@ -76,7 +52,7 @@ export default function BB8({ robot }: { robot: Robot }) {
         />
         <group name="root" scale={[0.8, 0.8, 0.8]}>
           <group name="GLTF_SceneRootNode">
-            <group name="Cuerpo_1" ref={(object: Group) => robotRegister(object, true, `${robot.name}-joint`)}>
+            <group name="Cuerpo_1" ref={(object: Group) => robotRegister(object, "body", robot.name)}>
               <mesh
                 name="Object_4"
                 castShadow
@@ -85,13 +61,17 @@ export default function BB8({ robot }: { robot: Robot }) {
                 material={materials.Material}
               />
             </group>
-            <group name="Cabeza_3" rotation={[-Math.PI, 0.39, -Math.PI]}>
+            <group
+              name="Cabeza_3"
+              rotation={[-Math.PI, 0.39, -Math.PI]}
+              ref={(object: Group) => robotRegister(object, "head", robot.name)}
+            >
               <mesh
                 name="Object_6"
                 castShadow
                 receiveShadow
                 geometry={nodes.Object_6.geometry}
-                material={materials['Material.001']}
+                material={materials["Material.001"]}
               />
               <group name="opticos_2" position={[-0.194, 1.141, -0.468]} rotation={[2.639, -0.346, 2.957]}>
                 <mesh
@@ -117,4 +97,4 @@ export default function BB8({ robot }: { robot: Robot }) {
   );
 }
 
-useGLTF.preload('/bb8.glb');
+useGLTF.preload("/bb8.glb");

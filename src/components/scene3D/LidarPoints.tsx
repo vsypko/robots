@@ -3,7 +3,7 @@ import { useFrame } from "@react-three/fiber";
 import { Points } from "@react-three/drei";
 import { useRapier } from "@react-three/rapier";
 import { useMemo, useRef } from "react";
-import { useRobots } from "../../context/RobotContext";
+import useSettings from "../../context/useSettings";
 
 type LidarProps = {
   maxDistance?: number;
@@ -21,18 +21,22 @@ export function LidarPoints({
   verticalResolution = 40
 }: LidarProps) {
   const { rapier, world } = useRapier();
-
+  const { selected } = useSettings();
   const pointsRef = useRef<THREE.Points>(null!);
   const materialRef = useRef<THREE.PointsMaterial>(null!);
   const frameCounterRef = useRef(0);
-  const robots = useRobots();
 
   const totalPoints = horizontalResolution * verticalResolution;
   const positions = useMemo(() => new Float32Array(totalPoints * 3), [totalPoints]);
   const colors = useMemo(() => new Float32Array(totalPoints * 3), [totalPoints]);
 
   useFrame(({ camera }) => {
-    if (!pointsRef.current || !world || !rapier || !robots.some((r) => r.selected)) return;
+    if (!pointsRef.current || !world || !rapier) return;
+    if (!selected) {
+      const geometry = pointsRef.current.geometry;
+      geometry.setDrawRange(0, 0);
+      return;
+    }
 
     const geometry = pointsRef.current.geometry;
 

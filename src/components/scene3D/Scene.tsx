@@ -1,19 +1,19 @@
-import { Suspense, useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { OrthographicCamera } from '@react-three/drei';
-import type { OrthographicCamera as OrthographicCameraType } from 'three';
-import Field from './Field';
-import { useRobots } from '../../context/RobotContext';
-import Robot from '../robots/Robot';
-import { Physics } from '@react-three/rapier';
-import { LidarPoints } from './LidarPoints';
-import MainCamera from './MainCamera';
-import useSettings from '../../context/useSettings';
-import FrameEngine from '../controls/FrameEngine';
+import { Suspense, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { OrthographicCamera } from "@react-three/drei";
+import type { OrthographicCamera as OrthographicCameraType } from "three";
+import Field from "./Field";
+import Robot from "../robots/Robot";
+import { Physics } from "@react-three/rapier";
+import { LidarPoints } from "./LidarPoints";
+import MainCamera from "./MainCamera";
+import useSettings from "../../context/useSettings";
+import FrameEngine from "../controls/FrameEngine";
+import { initRobots } from "../../utils/types";
 
 function MultiCameraRender({
   topCam,
-  miniSize = 300,
+  miniSize = 300
 }: {
   topCam: React.RefObject<OrthographicCameraType | null>;
   miniSize?: number;
@@ -45,7 +45,6 @@ function MultiCameraRender({
 }
 
 export default function Court() {
-  const robots = useRobots();
   const topCamera = useRef<OrthographicCameraType>(null);
   const { light } = useSettings();
 
@@ -74,11 +73,11 @@ export default function Court() {
       )}
       <Suspense fallback={null}>
         <Suspense fallback={null}>
-          <Physics gravity={[0, 0, 0]}>
+          <Physics gravity={[0, -9.81, 0]}>
             <Field />
-            {robots &&
-              robots.map((robot) => (
-                <Suspense fallback={null} key={robot.id}>
+            {initRobots &&
+              initRobots.map((robot) => (
+                <Suspense fallback={null} key={robot.name}>
                   <Robot robot={robot} />
                 </Suspense>
               ))}
