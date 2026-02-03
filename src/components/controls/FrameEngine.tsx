@@ -10,7 +10,7 @@ export default function FrameEngine() {
   const TURN_SPEED = -1;
   const bodyXRotation = useRef(0);
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     const { x, z } = joystickRef.current;
     const object = getObject("BB8");
     if (!object) return;
@@ -20,26 +20,31 @@ export default function FrameEngine() {
     base.setAngvel({ x: 0, y: x * TURN_SPEED, z: 0 }, true);
 
     const rotation = base.rotation();
-    const quaternion = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
-    const direction = new Vector3(0, 0, -1).applyQuaternion(quaternion).normalize();
+    const baseQuat = new Quaternion(rotation.x, rotation.y, rotation.z, rotation.w);
+    const direction = new Vector3(0, 0, -1).applyQuaternion(baseQuat).normalize();
 
     const linvel = base.linvel();
-    const currentVelocity = new Vector3(linvel.x, linvel.y, linvel.z).dot(direction);
-    const delta = z * DRIVE_SPEED - currentVelocity;
+    const currentLinvel = new Vector3(linvel.x, linvel.y, linvel.z).dot(direction);
+    // const delta = z * DRIVE_SPEED - currentVelocity;
 
     base.setLinvel(
       {
-        x: direction.x * delta,
+        x: direction.x * z * DRIVE_SPEED,
         y: linvel.y,
-        z: direction.z * delta
+        z: direction.z * z * DRIVE_SPEED
       },
       true
     );
 
     if (!body) return;
-    const targetRotation = bodyXRotation.current + -z * 0.2;
-    bodyXRotation.current += (targetRotation - bodyXRotation.current) * 0.1;
-    body.rotation.set(bodyXRotation.current, 0, 0);
+    // body.quaternion.copy(baseQuat.clone().invert());
+
+    const restoringQuat = baseQuat.clone().invert();
+    const RADIUS = 0.6;
+    const rollDelta = (currentLinvel * delta) / RADIUS;
+    bodyXRotation.current += rollDelta;
+    const bodyQuat = new Quaternion().setFromAxisAngle(new Vector3(-1, 0, 0), bodyXRotation.current);
+    body.quaternion.copy(bodyQuat.clone().multiply(restoringQuat));
   });
 
   return null;
