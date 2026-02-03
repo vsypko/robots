@@ -1,9 +1,9 @@
-import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
-import { Points } from "@react-three/drei";
-import { useRapier } from "@react-three/rapier";
-import { useMemo, useRef } from "react";
-import useSettings from "../../context/useSettings";
+import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
+import { Points, PointMaterial } from '@react-three/drei';
+import { useRapier } from '@react-three/rapier';
+import { useMemo, useRef } from 'react';
+import useSettings from '../../context/useSettings';
 
 type LidarProps = {
   maxDistance?: number;
@@ -18,7 +18,7 @@ export function LidarPoints({
   fovDegHorizontal = 80,
   fovDegVertical = 45,
   horizontalResolution = 100,
-  verticalResolution = 40
+  verticalResolution = 40,
 }: LidarProps) {
   const { rapier, world } = useRapier();
   const { selected, fpv } = useSettings();
@@ -105,7 +105,7 @@ export function LidarPoints({
       geometry.attributes.position.needsUpdate = true;
 
       if (!geometry.attributes.color) {
-        geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
       } else {
         // Update the color data directly
         const colorAttribute = geometry.attributes.color as THREE.BufferAttribute;
@@ -119,7 +119,7 @@ export function LidarPoints({
 
   return (
     <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
-      <pointsMaterial ref={materialRef} size={0.05} sizeAttenuation vertexColors depthWrite={false} />
+      <PointMaterial ref={materialRef} size={0.05} sizeAttenuation vertexColors depthWrite={false} />
     </Points>
   );
 }

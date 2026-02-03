@@ -1,19 +1,19 @@
-import { Suspense, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrthographicCamera } from "@react-three/drei";
-import type { OrthographicCamera as OrthographicCameraType } from "three";
-import Field from "./Field";
-import Robot from "../robots/Robot";
-import { Physics } from "@react-three/rapier";
-import { LidarPoints } from "./LidarPoints";
-import MainCamera from "./MainCamera";
-import useSettings from "../../context/useSettings";
-import FrameEngine from "../controls/FrameEngine";
-import { initRobots } from "../../utils/types";
+import { Suspense, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { OrthographicCamera } from '@react-three/drei';
+import type { OrthographicCamera as OrthographicCameraType } from 'three';
+import Field from './Field';
+import Robot from '../robots/Robot';
+import { Physics } from '@react-three/rapier';
+import { LidarPoints } from './LidarPoints';
+import MainCamera from './MainCamera';
+import useSettings from '../../context/useSettings';
+import FrameEngine from '../../engine/FrameEngine';
+import { initRobots } from '../../utils/types';
 
 function MultiCameraRender({
   topCam,
-  miniSize = 300
+  miniSize = 300,
 }: {
   topCam: React.RefObject<OrthographicCameraType | null>;
   miniSize?: number;

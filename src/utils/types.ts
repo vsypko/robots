@@ -1,6 +1,6 @@
-import type { RapierRigidBody } from "@react-three/rapier";
-import type { Dispatch, SetStateAction } from "react";
-import type { Group } from "three";
+import type { RapierRigidBody } from '@react-three/rapier';
+import type { Dispatch, SetStateAction } from 'react';
+import type { Group } from 'three';
 
 export type Mission = {
   id: number;
@@ -29,47 +29,47 @@ export type CheckPoint = {
 };
 
 export const initCp: CheckPoint = {
-  name: "",
+  name: '',
   selected: true,
   x: 0.0,
   z: 0.0,
-  angle: 3.14
+  angle: 3.14,
 };
 
 export const initMission: Mission = {
   id: 0,
-  name: "",
+  name: '',
   checkPoints: [],
-  robot: "",
+  robot: '',
   active: false,
-  selected: true
+  selected: true,
 };
 
 export const initRobots: Robot[] = [
   {
-    name: "R2D2",
+    name: 'R2D2',
     x: -5.0,
     y: -0.55,
     z: 0.0,
     angle: 0,
-    selected: false
+    selected: false,
   },
   {
-    name: "BB8",
+    name: 'BB8',
     x: 0.0,
     y: 0.46,
     z: 0.0,
     angle: 0,
-    selected: false
+    selected: false,
   },
   {
-    name: "BB9",
+    name: 'BB9',
     x: 5.0,
     y: -0.6,
     z: 0.0,
     angle: 0,
-    selected: false
-  }
+    selected: false,
+  },
 ];
 
 export type SettingsType = {
@@ -88,13 +88,13 @@ export const initSettings: SettingsType = {
   setLight: () => {},
   map: true,
   setMap: () => {},
-  selected: "",
+  selected: '',
   setSelected: () => {},
   fpv: false,
-  setFpv: () => {}
+  setFpv: () => {},
 };
 
-export type RobotRegisterType = {
+export type EntityRegisterType = {
   base?: RapierRigidBody;
   body?: Group;
 };
@@ -106,5 +106,10 @@ export type JoystickType = {
 
 export const initJoystick: JoystickType = {
   x: 0,
-  z: 0
+  z: 0,
+};
+
+export type ActionType = {
+  angvel: number;
+  linvel: number;
 };

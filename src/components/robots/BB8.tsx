@@ -1,10 +1,10 @@
-import { PerspectiveCamera, useGLTF } from "@react-three/drei";
-import { RapierRigidBody, RigidBody } from "@react-three/rapier";
-import type { GLTF } from "three-stdlib";
-import type { Robot } from "../../utils/types";
-import { useRegister } from "../controls/engineRegister";
-import type { Group, Mesh, MeshStandardMaterial } from "three";
-import useSettings from "../../context/useSettings";
+import { PerspectiveCamera, useGLTF } from '@react-three/drei';
+import { RapierRigidBody, RigidBody } from '@react-three/rapier';
+import type { GLTF } from 'three-stdlib';
+import type { Robot } from '../../utils/types';
+import { useEntityRegister } from '../../engine/entityRegister';
+import type { Group, Mesh, MeshStandardMaterial } from 'three';
+import useSettings from '../../context/useSettings';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -16,20 +16,20 @@ type GLTFResult = GLTF & {
 
   materials: {
     Material: MeshStandardMaterial;
-    ["Material.001"]: MeshStandardMaterial;
+    ['Material.001']: MeshStandardMaterial;
     lentes: MeshStandardMaterial;
     plastico: MeshStandardMaterial;
   };
 };
 
 export default function BB8({ robot }: { robot: Robot }) {
-  const { nodes, materials } = useGLTF("/bb8.glb") as unknown as GLTFResult;
-  const { robotRegister } = useRegister();
+  const { nodes, materials } = useGLTF('/bb8.glb') as unknown as GLTFResult;
+  const { robotRegister } = useEntityRegister();
   const { selected, fpv } = useSettings();
 
   return (
     <RigidBody
-      ref={(object: RapierRigidBody) => robotRegister(object, "base", robot.name)}
+      ref={(object: RapierRigidBody) => robotRegister(object, 'base', robot.name)}
       type="dynamic"
       colliders="hull"
       position={[robot.x, robot.y, robot.z]}
@@ -43,7 +43,7 @@ export default function BB8({ robot }: { robot: Robot }) {
     >
       <group name="root" dispose={null}>
         <group name="GLTF_SceneRootNode" scale={[0.8, 0.8, 0.8]}>
-          <group name="Cuerpo_1" ref={(object: Group) => robotRegister(object, "body", robot.name)}>
+          <group name="Cuerpo_1" ref={(object: Group) => robotRegister(object, 'body', robot.name)}>
             <mesh
               name="Object_4"
               castShadow
@@ -67,7 +67,7 @@ export default function BB8({ robot }: { robot: Robot }) {
               castShadow
               receiveShadow
               geometry={nodes.Object_6.geometry}
-              material={materials["Material.001"]}
+              material={materials['Material.001']}
             />
             <group name="opticos_2" position={[-0.194, 1.141, -0.468]} rotation={[2.639, -0.346, 2.957]}>
               <mesh
@@ -92,4 +92,4 @@ export default function BB8({ robot }: { robot: Robot }) {
   );
 }
 
-useGLTF.preload("/bb8.glb");
+useGLTF.preload('/bb8.glb');

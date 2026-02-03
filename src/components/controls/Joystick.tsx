@@ -1,11 +1,11 @@
-import { useState, useRef, memo } from "react";
-import type { PointerEvent } from "react";
-import { initJoystick } from "../../utils/types";
-import useJoystick from "../../context/useJoystick";
+import { useState, useRef, memo } from 'react';
+import type { PointerEvent } from 'react';
+import { useActionRegister } from '../../engine/actionRegister';
+import useSettings from '../../context/useSettings';
 
 const initPosition = {
   x: 0,
-  y: 0
+  y: 0,
 };
 
 type PositionType = {
@@ -14,7 +14,8 @@ type PositionType = {
 };
 
 const Joystick = memo(({ size }: { size: number }) => {
-  const joystickRef = useJoystick();
+  const { selected } = useSettings();
+  const { actionRegister } = useActionRegister();
 
   // Stick is currently being captured.
   const [stickCaptured, setStickCaptured] = useState<boolean>(false);
@@ -79,11 +80,7 @@ const Joystick = memo(({ size }: { size: number }) => {
     setTranslation({ x, y });
 
     // Velocities are computed from normalized pointer X/Y offsets.
-    joystickRef.current = {
-      x: x / stickRadius,
-      z: -y / stickRadius
-      // angle: theta
-    };
+    actionRegister({ angvel: x / stickRadius, linvel: -y / stickRadius }, selected);
   }
 
   //Event handler for pointer up which resets logic.
@@ -91,7 +88,7 @@ const Joystick = memo(({ size }: { size: number }) => {
     if (e.pointerId !== pointerRef.current && !stickCaptured) return;
     e.stopPropagation();
     if (e.currentTarget) e.currentTarget.releasePointerCapture(e.pointerId);
-    joystickRef.current = initJoystick;
+    actionRegister({ angvel: 0, linvel: 0 }, selected);
     pointerRef.current = null;
     pointerStopRef.current = null;
     setStickCaptured(false);
@@ -114,14 +111,14 @@ const Joystick = memo(({ size }: { size: number }) => {
         onContextMenu={handleContextMenu}
         tabIndex={-1}
         className={`absolute landscape:opacity-80 bg-teal-500 flex rounded-full w-1/2 h-1/2 shadow-md shadow-slate-900/50 cursor-pointer active:cursor-grabbing ${
-          stickCaptured ? " cursor-move" : ""
+          stickCaptured ? ' cursor-move' : ''
         }`}
         style={{
           transform: `translate(
           ${translation.x}px,
           ${translation.y}px
           )`,
-          caretColor: "transparent"
+          caretColor: 'transparent',
         }}
       ></button>
     </div>
