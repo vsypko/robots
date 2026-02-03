@@ -1,59 +1,60 @@
-import * as THREE from "three";
-import { useRef } from "react";
+import type { Group, Mesh, MeshStandardMaterial } from "three";
 import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { Robot } from "../../utils/types";
+import { useRegister } from "../controls/engineRegister";
+import useSettings from "../../context/useSettings";
 
 type GLTFResult = GLTF & {
   nodes: {
-    ["Object002_01_-_Default_0_1"]: THREE.Mesh;
-    ["Object002_01_-_Default_0_2"]: THREE.Mesh;
-    ["Object002_01_-_Default_0_3"]: THREE.Mesh;
-    ["Object002_01_-_Default_0_4"]: THREE.Mesh;
-    ["Object002_01_-_Default_0_5"]: THREE.Mesh;
-    ["Sphere001_03_-_Default_0_1"]: THREE.Mesh;
-    ["Sphere001_03_-_Default_0_2"]: THREE.Mesh;
-    ["Sphere001_03_-_Default_0_3"]: THREE.Mesh;
+    ["Object002_01_-_Default_0_1"]: Mesh;
+    ["Object002_01_-_Default_0_2"]: Mesh;
+    ["Object002_01_-_Default_0_3"]: Mesh;
+    ["Object002_01_-_Default_0_4"]: Mesh;
+    ["Object002_01_-_Default_0_5"]: Mesh;
+    ["Sphere001_03_-_Default_0_1"]: Mesh;
+    ["Sphere001_03_-_Default_0_2"]: Mesh;
+    ["Sphere001_03_-_Default_0_3"]: Mesh;
   };
   materials: {
-    ["01_-_Default"]: THREE.MeshStandardMaterial;
-    ["07_-_Default"]: THREE.MeshStandardMaterial;
-    ["02_-_Default"]: THREE.MeshStandardMaterial;
-    ["03_-_Default"]: THREE.MeshStandardMaterial;
-    ["08_-_Default"]: THREE.MeshStandardMaterial;
+    ["01_-_Default"]: MeshStandardMaterial;
+    ["07_-_Default"]: MeshStandardMaterial;
+    ["02_-_Default"]: MeshStandardMaterial;
+    ["03_-_Default"]: MeshStandardMaterial;
+    ["08_-_Default"]: MeshStandardMaterial;
   };
 };
 
 export default function BB9({ robot }: { robot: Robot }) {
-  const rigidBodyRef = useRef<RapierRigidBody>(null);
-  const rotative = useRef<THREE.Group | null>(null);
   const { nodes, materials } = useGLTF("/bb9.glb") as unknown as GLTFResult;
+  const { robotRegister } = useRegister();
+  const { selected, fpv } = useSettings();
 
   return (
     <RigidBody
-      ref={rigidBodyRef}
+      ref={(object: RapierRigidBody) => robotRegister(object, "base", robot.name)}
       colliders="hull"
       type="dynamic"
       position={[robot.x, robot.y, robot.z]}
-      enabledTranslations={[true, false, true]}
       enabledRotations={[false, true, false]}
       restitution={0.1}
-      friction={1.8}
-      linearDamping={1.5}
-      angularDamping={2}
+      friction={1.5}
+      linearDamping={1.2}
+      angularDamping={1.2}
       mass={9}
     >
-      <group dispose={null}>
-        <PerspectiveCamera
-          makeDefault={robot?.selected}
-          up={[0, 1, 0]}
-          position={[0, 3.8, -0.9]}
-          fov={60}
-          near={0.01}
-          far={100}
-        />
-        <group position={[0, 3.228, 0]} rotation={[-Math.PI / 2, 0, -Math.PI]}>
+      <group name="root" dispose={null}>
+        <group position={[0, 3.25, 0]} rotation={[-Math.PI / 2, 0, -Math.PI]}>
+          <PerspectiveCamera
+            makeDefault={selected === robot.name && fpv}
+            up={[0, 1, 0]}
+            position={[0.0, -1, 0.6]}
+            rotation={[Math.PI / 2, Math.PI, 0]}
+            fov={60}
+            near={0.01}
+            far={100}
+          />
           <mesh
             castShadow
             receiveShadow
@@ -85,7 +86,8 @@ export default function BB9({ robot }: { robot: Robot }) {
             material={materials["08_-_Default"]}
           />
         </group>
-        <group position={[0, 1.674, 0]} ref={rotative}>
+
+        <group position={[0, 1.674, 0]} ref={(object: Group) => robotRegister(object, "body", robot.name)}>
           <mesh
             castShadow
             receiveShadow

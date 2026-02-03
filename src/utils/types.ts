@@ -79,6 +79,8 @@ export type SettingsType = {
   setMap: Dispatch<SetStateAction<boolean>>;
   selected: string;
   setSelected: Dispatch<SetStateAction<string>>;
+  fpv: boolean;
+  setFpv: Dispatch<SetStateAction<boolean>>;
 };
 
 export const initSettings: SettingsType = {
@@ -87,7 +89,9 @@ export const initSettings: SettingsType = {
   map: true,
   setMap: () => {},
   selected: "",
-  setSelected: () => {}
+  setSelected: () => {},
+  fpv: false,
+  setFpv: () => {}
 };
 
 export type RobotRegisterType = {
@@ -98,11 +102,9 @@ export type RobotRegisterType = {
 export type JoystickType = {
   x: number;
   z: number;
-  // angle: number;
 };
 
 export const initJoystick: JoystickType = {
   x: 0,
   z: 0
-  // angle: 0,
 };

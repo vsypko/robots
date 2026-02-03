@@ -3,16 +3,18 @@ import { useFrame } from "@react-three/fiber";
 import useJoystick from "../../context/useJoystick";
 import { Vector3, Quaternion } from "three";
 import { useRef } from "react";
+import useSettings from "../../context/useSettings";
 
 export default function FrameEngine() {
   const joystickRef = useJoystick();
   const DRIVE_SPEED = 3;
   const TURN_SPEED = -1;
   const bodyXRotation = useRef(0);
+  const { selected } = useSettings();
 
   useFrame((_, delta) => {
     const { x, z } = joystickRef.current;
-    const object = getObject("BB8");
+    const object = getObject(selected);
     if (!object) return;
     const { base, body } = object;
 

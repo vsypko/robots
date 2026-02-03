@@ -25,7 +25,7 @@ type GLTFResult = GLTF & {
 export default function BB8({ robot }: { robot: Robot }) {
   const { nodes, materials } = useGLTF("/bb8.glb") as unknown as GLTFResult;
   const { robotRegister } = useRegister();
-  const { selected } = useSettings();
+  const { selected, fpv } = useSettings();
 
   return (
     <RigidBody
@@ -54,7 +54,7 @@ export default function BB8({ robot }: { robot: Robot }) {
           </group>
           <group name="Cabeza_3" rotation={[-Math.PI, 0.39, -Math.PI]}>
             <PerspectiveCamera
-              makeDefault={selected === robot.name}
+              makeDefault={selected === robot.name && fpv}
               up={[0, 1, 0]}
               position={[0, 1.65, 0.8]}
               rotation={[0, 3.55, 0]}

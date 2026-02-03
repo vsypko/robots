@@ -1,39 +1,41 @@
-import * as THREE from "three";
-import { useRef } from "react";
+import type { Mesh, MeshStandardMaterial } from "three";
 import { PerspectiveCamera, useGLTF } from "@react-three/drei";
 import type { GLTF } from "three-stdlib";
 import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import type { Robot } from "../../utils/types";
+import { useRegister } from "../controls/engineRegister";
+import useSettings from "../../context/useSettings";
 
 type GLTFResult = GLTF & {
   nodes: {
-    Object_2: THREE.Mesh;
+    Object_2: Mesh;
   };
   materials: {
-    R2D2Tex: THREE.MeshStandardMaterial;
+    R2D2Tex: MeshStandardMaterial;
   };
 };
 
 export default function R2D2({ robot }: { robot: Robot }) {
   const { nodes, materials } = useGLTF("/r2d2.glb") as unknown as GLTFResult;
-  const rigidBodyRef = useRef<RapierRigidBody | null>(null);
+  const { robotRegister } = useRegister();
+  const { selected, fpv } = useSettings();
 
   return (
     <RigidBody
-      ref={rigidBodyRef}
+      ref={(object: RapierRigidBody) => robotRegister(object, "base", robot.name)}
+      type="dynamic"
       colliders="hull"
       position={[robot.x, robot.y, robot.z]}
-      enabledTranslations={[true, false, true]}
       enabledRotations={[false, true, false]}
       restitution={0.1}
-      friction={1.8}
-      linearDamping={1.5}
-      angularDamping={2}
-      mass={5}
+      friction={2}
+      linearDamping={1.0}
+      angularDamping={1.0}
+      mass={6}
     >
-      <group dispose={null}>
+      <group name="root" dispose={null}>
         <PerspectiveCamera
-          makeDefault={robot?.selected}
+          makeDefault={selected === robot.name && fpv}
           position={[0, 3.7, -0.5]}
           up={[0, 1, 0]}
           fov={60}

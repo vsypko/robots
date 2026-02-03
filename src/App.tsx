@@ -8,7 +8,7 @@ import RobotSelector from "./components/controls/RobotSelector";
 import useSettings from "./context/useSettings";
 
 export default function App() {
-  const { light, setLight, map, setMap } = useSettings();
+  const { light, setLight, map, setMap, fpv, setFpv } = useSettings();
   return (
     <div className="w-full h-screen md:overflow-hidden p-2 md:flex relative">
       {/* <div className="hidden md:flex w-full h-full mb-2 md:mb-0 md:mr-2 md:w-1/5 rounded-2xl border-slate-800 dark:border-slate-200 border relative"> */}
@@ -21,6 +21,7 @@ export default function App() {
         <RobotSelector />
         <Toggle value={light} setValue={setLight} title="Light" />
         <Toggle value={map} setValue={setMap} title="Map" />
+        <Toggle value={fpv} setValue={setFpv} title="FPV" />
       </div>
       <div className="absolute w-40 h-40 flex z-20 right-4 bottom-4 touch-none overscroll-none">
         <Joystick size={160} />

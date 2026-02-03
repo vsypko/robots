@@ -21,7 +21,7 @@ export function LidarPoints({
   verticalResolution = 40
 }: LidarProps) {
   const { rapier, world } = useRapier();
-  const { selected } = useSettings();
+  const { selected, fpv } = useSettings();
   const pointsRef = useRef<THREE.Points>(null!);
   const materialRef = useRef<THREE.PointsMaterial>(null!);
   const frameCounterRef = useRef(0);
@@ -32,7 +32,7 @@ export function LidarPoints({
 
   useFrame(({ camera }) => {
     if (!pointsRef.current || !world || !rapier) return;
-    if (!selected) {
+    if (!selected || !fpv) {
       const geometry = pointsRef.current.geometry;
       geometry.setDrawRange(0, 0);
       return;
