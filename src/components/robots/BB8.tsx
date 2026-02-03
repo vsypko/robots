@@ -52,11 +52,7 @@ export default function BB8({ robot }: { robot: Robot }) {
               material={materials.Material}
             />
           </group>
-          <group
-            name="Cabeza_3"
-            rotation={[-Math.PI, 0.39, -Math.PI]}
-            ref={(object: Group) => robotRegister(object, "head", robot.name)}
-          >
+          <group name="Cabeza_3" rotation={[-Math.PI, 0.39, -Math.PI]}>
             <PerspectiveCamera
               makeDefault={selected === robot.name}
               up={[0, 1, 0]}

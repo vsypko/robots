@@ -14,7 +14,6 @@ type PositionType = {
 };
 
 const Joystick = memo(({ size }: { size: number }) => {
-
   const joystickRef = useJoystick();
 
   // Stick is currently being captured.
@@ -36,12 +35,6 @@ const Joystick = memo(({ size }: { size: number }) => {
   const pointerStopRef = useRef<number | null>(null);
 
   const stickRadius = size / 4;
-
-  // function angleBetweenVectors(prev: { x: number, z: number }, curr: { x: number, z: number }) {
-  //   const sinTheta = curr.x * prev.z - curr.z * prev.x;
-  //   const cosTheta = curr.x * prev.x + curr.z * prev.z;
-  //   return Math.atan2(sinTheta, cosTheta);
-  // }
 
   //Event handler for pointer down.
   function handlePointerDown(e: PointerEvent<HTMLButtonElement>) {
@@ -88,9 +81,9 @@ const Joystick = memo(({ size }: { size: number }) => {
     // Velocities are computed from normalized pointer X/Y offsets.
     joystickRef.current = {
       x: x / stickRadius,
-      z: -y / stickRadius,
+      z: -y / stickRadius
       // angle: theta
-    }
+    };
   }
 
   //Event handler for pointer up which resets logic.
@@ -119,17 +112,19 @@ const Joystick = memo(({ size }: { size: number }) => {
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerUp}
         onContextMenu={handleContextMenu}
-        className={`absolute landscape:opacity-80 bg-teal-500 flex rounded-full w-1/2 h-1/2 shadow-md shadow-slate-900/50 cursor-pointer active:cursor-grabbing ${stickCaptured ? " cursor-move" : ""
-          }`}
+        tabIndex={-1}
+        className={`absolute landscape:opacity-80 bg-teal-500 flex rounded-full w-1/2 h-1/2 shadow-md shadow-slate-900/50 cursor-pointer active:cursor-grabbing ${
+          stickCaptured ? " cursor-move" : ""
+        }`}
         style={{
           transform: `translate(
           ${translation.x}px,
           ${translation.y}px
-          )`
+          )`,
+          caretColor: "transparent"
         }}
       ></button>
     </div>
   );
-
 });
 export default Joystick;

@@ -42,7 +42,7 @@ export default function BB9({ robot }: { robot: Robot }) {
       friction={1.8}
       linearDamping={1.5}
       angularDamping={2}
-      mass={7}
+      mass={9}
     >
       <group dispose={null}>
         <PerspectiveCamera

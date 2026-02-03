@@ -25,7 +25,6 @@ export default function FrameEngine() {
 
     const linvel = base.linvel();
     const currentLinvel = new Vector3(linvel.x, linvel.y, linvel.z).dot(direction);
-    // const delta = z * DRIVE_SPEED - currentVelocity;
 
     base.setLinvel(
       {
@@ -44,7 +43,7 @@ export default function FrameEngine() {
     const rollDelta = (currentLinvel * delta) / RADIUS;
     bodyXRotation.current += rollDelta;
     const bodyQuat = new Quaternion().setFromAxisAngle(new Vector3(-1, 0, 0), bodyXRotation.current);
-    body.quaternion.copy(bodyQuat.clone().multiply(restoringQuat));
+    body.quaternion.copy(restoringQuat.clone().premultiply(bodyQuat));
   });
 
   return null;

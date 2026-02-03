@@ -93,7 +93,6 @@ export const initSettings: SettingsType = {
 export type RobotRegisterType = {
   base?: RapierRigidBody;
   body?: Group;
-  head?: Group;
 };
 
 export type JoystickType = {
