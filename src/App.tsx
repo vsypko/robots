@@ -26,6 +26,9 @@ export default function App() {
       <div className="absolute w-40 h-40 flex z-20 right-4 bottom-4 touch-none overscroll-none">
         <Joystick size={160} />
       </div>
+      {map && !light && (
+        <div className="absolute left-[0.9rem] top-[0.9rem] w-[19.4em] h-[19.4em] rounded-2xl border-slate-800 dark:border-slate-200 border overflow-hidden z-20" />
+      )}
       <div className="w-full h-full rounded-2xl border-slate-800 dark:border-slate-200 border overflow-hidden">
         <Scene />
       </div>
