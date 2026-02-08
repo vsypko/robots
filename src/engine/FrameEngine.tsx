@@ -1,11 +1,10 @@
-import { getEntity, useEntityRegister } from './entityRegister';
+import { getEntity } from './entityRegister';
 import { useFrame } from '@react-three/fiber';
 import { Vector3, Quaternion } from 'three';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { getActions } from './actionRegister';
 
 export default function FrameEngine() {
-  const { clearRegister } = useEntityRegister();
   const DRIVE_SPEED = 3;
   const TURN_SPEED = -1;
   const bodyXRotation = useRef(0);
@@ -49,7 +48,7 @@ export default function FrameEngine() {
       }
 
       if (body) {
-        const RADIUS = 2.56 / 2;
+        const RADIUS = 1.98 / 2;
         const rollDelta = (currentLinvel * delta) / RADIUS;
         bodyXRotation.current += rollDelta;
         const restoringQuat = baseQuat.clone().invert();
@@ -58,11 +57,6 @@ export default function FrameEngine() {
       }
     }
   });
-  useEffect(() => {
-    return () => {
-      clearRegister();
-    };
-  }, []);
 
   return null;
 }

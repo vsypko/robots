@@ -49,7 +49,7 @@ export const initRobots: Robot[] = [
   {
     name: 'R2D2',
     x: -5.0,
-    y: -0.55,
+    y: 0.0,
     z: 0.0,
     angle: 0,
     selected: false,
@@ -57,7 +57,7 @@ export const initRobots: Robot[] = [
   {
     name: 'BB8',
     x: 0.0,
-    y: 0.46,
+    y: 0.0,
     z: 0.0,
     angle: 0,
     selected: false,
