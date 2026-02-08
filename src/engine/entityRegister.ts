@@ -1,13 +1,13 @@
 // import { useCallback } from 'react';
 import type { EntityRegisterType } from '../utils/types';
 import type { RapierRigidBody } from '@react-three/rapier';
-import type { Group } from 'three';
+import type { Group, Mesh } from 'three';
 
 const entities = new Map<string, EntityRegisterType>();
 
 // Registration hook.
 export function useEntityRegister() {
-  const robotRegister = (object: RapierRigidBody | Group, part: string, key: string) => {
+  const robotRegister = (object: RapierRigidBody | Group | Mesh, part: string, key: string) => {
     const existing = entities.get(key) || {};
     register({ ...existing, [part]: object }, key);
   };
