@@ -33,19 +33,20 @@ export default function DO({ robot }: { robot: Robot }) {
       friction={1}
       linearDamping={1}
       angularDamping={1.0}
-      mass={1}
+      mass={4}
     >
       <group dispose={null}>
         <PerspectiveCamera
           makeDefault={selected === robot.name && fpv}
           up={[0, 1, 0]}
-          position={[0, 1.5, -1.5]}
+          position={[0, 1.6, -1.5]}
           fov={60}
           near={0.01}
           far={100}
         />
 
         <mesh
+          name="body"
           castShadow
           receiveShadow
           geometry={nodes.Body.geometry}
@@ -53,6 +54,7 @@ export default function DO({ robot }: { robot: Robot }) {
           position={[0.117, 1.092, -0.34]}
         >
           <mesh
+            name="wheel"
             ref={(object: RapierRigidBody) => robotRegister(object, 'wheel', robot.name)}
             castShadow
             receiveShadow
