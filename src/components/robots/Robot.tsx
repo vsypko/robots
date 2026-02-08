@@ -3,7 +3,7 @@ import type { Robot } from '../../utils/types';
 
 const R2D2 = lazy(() => import('./R2D2'));
 const BB8 = lazy(() => import('./BB8'));
-const BB9 = lazy(() => import('./BB9'));
+const DO = lazy(() => import('./DO'));
 
 export default function Robot({ robot }: { robot: Robot }) {
   switch (robot.name) {
@@ -13,8 +13,8 @@ export default function Robot({ robot }: { robot: Robot }) {
     case 'BB8':
       return <BB8 robot={robot} />;
 
-    case 'BB9':
-      return <BB9 robot={robot} />;
+    case 'DO':
+      return <DO robot={robot} />;
 
     default:
       return null;

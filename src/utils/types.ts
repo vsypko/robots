@@ -1,6 +1,6 @@
 import type { RapierRigidBody } from '@react-three/rapier';
 import type { Dispatch, SetStateAction } from 'react';
-import type { Group } from 'three';
+import type { Group, Mesh } from 'three';
 
 export type Mission = {
   id: number;
@@ -63,9 +63,9 @@ export const initRobots: Robot[] = [
     selected: false,
   },
   {
-    name: 'BB9',
+    name: 'DO',
     x: 5.0,
-    y: 1.4,
+    y: 0.0,
     z: 0.0,
     angle: 0,
     selected: false,
@@ -97,6 +97,7 @@ export const initSettings: SettingsType = {
 export type EntityRegisterType = {
   base?: RapierRigidBody;
   body?: Group;
+  wheel?: Mesh;
 };
 
 export type JoystickType = {
