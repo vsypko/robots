@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useRobots } from '../../context/RobotContext';
 import MissionForm from './MissionForm';
 import { initMission } from '../../utils/types';
 import type { Mission } from '../../utils/types';
@@ -13,11 +12,6 @@ export function MissionsList() {
   const [formIsOpen, setFormIsOpen] = useState(false);
 
   const dispatch = useMissionDispatch();
-  const robots = useRobots();
-
-  function getMissionRobot(mission: Mission) {
-    return robots.find((robot) => robot.id === mission.robot_id);
-  }
 
   function handleAddMission() {
     if (cps.length > 0) {
@@ -54,7 +48,7 @@ export function MissionsList() {
             >
               <div className="place-items-start px-1 rounded-full group:hover:bg-teal-400 dark:group-hover:bg-teal-800">
                 <span className="mr-3">{mission.name}</span>
-                <span className="font-bold italic text-lime-500">{getMissionRobot(mission)?.name}</span>
+                {/* <span className="font-bold italic text-lime-500">{getMissionRobot(mission)?.name}</span> */}
               </div>
 
               <div className="flex justify-end text-2xl">
