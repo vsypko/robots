@@ -209,3 +209,37 @@ export function ReportsIcon({ size = 16, className = '' }) {
     </svg>
   );
 }
+
+export function LightIcon({ className = '' }) {
+  return (
+    <svg fill="none" viewBox="0 0 24 24" className={className}>
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18"
+      />
+    </svg>
+  );
+}
+
+export function MapIcon({ className = '' }) {
+  return (
+    <svg width="34" height="34" viewBox="0 0 68 68" className={className}>
+      <polygon points="1 50,1 0,21 10,42 0,63 10,63 64,42 54,21 64,0 54" />
+      <line x1="21" y1="10" x2="21" y2="64" />
+      <line x1="42" y1="0" x2="42" y2="54" />
+    </svg>
+  );
+}
+
+export function LidarIcon({ className = '' }) {
+  return (
+    <svg fill="none" viewBox="0 0 24 24" className={className}>
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8.288 15.038a5.25 5.25 0 0 1 7.424 0M5.106 11.856c3.807-3.808 9.98-3.808 13.788 0M1.924 8.674c5.565-5.565 14.587-5.565 20.152 0M12.53 18.22l-.53.53-.53-.53a.75.75 0 0 1 1.06 0Z"
+      />
+    </svg>
+  );
+}

@@ -13,7 +13,7 @@ import { initRobots } from '../../utils/types';
 
 function MultiCameraRender({
   topCam,
-  miniSize = 300,
+  miniSize = 180,
 }: {
   topCam: React.RefObject<OrthographicCameraType | null>;
   miniSize?: number;
@@ -31,8 +31,8 @@ function MultiCameraRender({
 
     if (topCam.current && map) {
       gl.setScissorTest(true);
-      gl.setViewport(10, height - miniSize - 10, miniSize, miniSize);
-      gl.setScissor(10, height - miniSize - 10, miniSize, miniSize);
+      gl.setViewport(8, height - miniSize - 8, miniSize, miniSize);
+      gl.setScissor(8, height - miniSize - 8, miniSize, miniSize);
 
       topCam.current.updateProjectionMatrix();
       gl.render(scene, topCam.current!);

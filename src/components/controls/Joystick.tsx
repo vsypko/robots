@@ -101,7 +101,7 @@ const Joystick = memo(({ size }: { size: number }) => {
 
   return (
     <div
-      className={`relative w-full h-full flex justify-center items-center rounded-full bg-edw-800 shadow-inner shadow-slate-900/50 border-3 border-teal-500`}
+      className={`relative w-full h-full flex justify-center items-center rounded-full shadow-inner shadow-slate-900/50 border-3 border-sky-500`}
     >
       <button
         onPointerDown={handlePointerDown}
@@ -110,7 +110,7 @@ const Joystick = memo(({ size }: { size: number }) => {
         onPointerCancel={handlePointerUp}
         onContextMenu={handleContextMenu}
         tabIndex={-1}
-        className={`absolute landscape:opacity-80 bg-teal-500 flex rounded-full w-1/2 h-1/2 shadow-md shadow-slate-900/50 cursor-pointer active:cursor-grabbing ${
+        className={`absolute landscape:opacity-80 bg-sky-500 flex rounded-full w-1/2 h-1/2 shadow-md shadow-slate-900/50 cursor-pointer active:cursor-grabbing ${
           stickCaptured ? ' cursor-move' : ''
         }`}
         style={{
