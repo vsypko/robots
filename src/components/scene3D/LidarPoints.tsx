@@ -7,26 +7,18 @@ import useSettings from '../../context/useSettings';
 
 type LidarProps = {
   maxDistance?: number;
-  fovDegHorizontal?: number;
-  fovDegVertical?: number;
-  horizontalResolution?: number;
-  verticalResolution?: number;
+  horizontal?: number;
+  vertical?: number;
 };
 
-export function LidarPoints({
-  maxDistance = 20,
-  fovDegHorizontal = 80,
-  fovDegVertical = 45,
-  horizontalResolution = 100,
-  verticalResolution = 40,
-}: LidarProps) {
+export function LidarPoints({ maxDistance = 20, horizontal = 90, vertical = 45 }: LidarProps) {
   const { rapier, world } = useRapier();
   const { selected, fpv } = useSettings();
   const pointsRef = useRef<THREE.Points>(null!);
   const materialRef = useRef<THREE.PointsMaterial>(null!);
   const frameCounterRef = useRef(0);
 
-  const totalPoints = horizontalResolution * verticalResolution;
+  const totalPoints = horizontal * vertical;
   const positions = useMemo(() => new Float32Array(totalPoints * 3), [totalPoints]);
   const colors = useMemo(() => new Float32Array(totalPoints * 3), [totalPoints]);
 
@@ -43,24 +35,23 @@ export function LidarPoints({
     // Ensure camera's world matrix is up to date
     scene.updateMatrixWorld(true);
     camera.updateMatrixWorld(true);
-    camera.updateProjectionMatrix();
 
     const origin = new THREE.Vector3();
     const quaternion = new THREE.Quaternion();
     camera.getWorldPosition(origin);
     camera.getWorldQuaternion(quaternion);
 
-    const halfFovRadHorizontal = THREE.MathUtils.degToRad(fovDegHorizontal / 2);
-    const halfFovRadVertical = THREE.MathUtils.degToRad(fovDegVertical / 2);
+    const halfFovRadHorizontal = THREE.MathUtils.degToRad(horizontal / 2);
+    const halfFovRadVertical = THREE.MathUtils.degToRad(vertical / 2);
     const tanHalfFovHorizontal = Math.tan(halfFovRadHorizontal);
     const tanHalfFovVertical = Math.tan(halfFovRadVertical);
 
     let idx = 0;
 
-    for (let y = 0; y < verticalResolution; y++) {
-      for (let x = 0; x < horizontalResolution; x++) {
-        const u = (x / (horizontalResolution - 1)) * 2 - 1;
-        const v = (y / (verticalResolution - 1)) * 2 - 1 - 0.5;
+    for (let y = 1; y < vertical; y++) {
+      for (let x = 1; x < horizontal; x++) {
+        const u = (x / horizontal) * 2 - 1;
+        const v = (y / vertical) * 2 - 1;
 
         const dir = new THREE.Vector3(u * tanHalfFovHorizontal, v * tanHalfFovVertical, -1).normalize();
         dir.applyQuaternion(quaternion);
@@ -99,18 +90,13 @@ export function LidarPoints({
         idx += 3;
       }
 
-      const count = idx / 3;
-      geometry.setDrawRange(0, count);
-      geometry.attributes.position.needsUpdate = true;
+      geometry.setDrawRange(0, idx / 3);
 
       if (!geometry.attributes.color) {
         geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      } else {
-        // Update the color data directly
-        const colorAttribute = geometry.attributes.color as THREE.BufferAttribute;
-        colorAttribute.array = colors;
-        colorAttribute.needsUpdate = true;
       }
+      geometry.attributes.position.needsUpdate = true;
+      geometry.attributes.color.needsUpdate = true;
     }
 
     frameCounterRef.current++;
