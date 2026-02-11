@@ -30,7 +30,7 @@ export function LidarPoints({
   const positions = useMemo(() => new Float32Array(totalPoints * 3), [totalPoints]);
   const colors = useMemo(() => new Float32Array(totalPoints * 3), [totalPoints]);
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera, scene }) => {
     if (!pointsRef.current || !world || !rapier) return;
     if (!selected || !fpv) {
       const geometry = pointsRef.current.geometry;
@@ -41,7 +41,9 @@ export function LidarPoints({
     const geometry = pointsRef.current.geometry;
 
     // Ensure camera's world matrix is up to date
+    scene.updateMatrixWorld(true);
     camera.updateMatrixWorld(true);
+    camera.updateProjectionMatrix();
 
     const origin = new THREE.Vector3();
     const quaternion = new THREE.Quaternion();

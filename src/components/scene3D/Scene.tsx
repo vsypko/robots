@@ -26,6 +26,7 @@ function MultiCameraRender({
     gl.setViewport(0, 0, width, height);
     gl.setScissor(0, 0, width, height);
     scene.updateMatrixWorld(true);
+    camera.updateMatrixWorld(true);
     camera.updateProjectionMatrix();
     gl.render(scene, camera);
 
@@ -38,6 +39,7 @@ function MultiCameraRender({
       gl.render(scene, topCam.current!);
       gl.setScissorTest(false);
       scene.updateMatrixWorld(true);
+      camera.updateMatrixWorld(true);
       camera.updateProjectionMatrix();
     }
   });
