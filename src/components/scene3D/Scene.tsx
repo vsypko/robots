@@ -36,8 +36,9 @@ function MultiCameraRender({
 
       topCam.current.updateProjectionMatrix();
       gl.render(scene, topCam.current!);
-
       gl.setScissorTest(false);
+      scene.updateMatrixWorld(true);
+      camera.updateProjectionMatrix();
     }
   });
 
