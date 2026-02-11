@@ -35,12 +35,11 @@ function MultiCameraRender({
       gl.setViewport(8, height - miniSize - 8, miniSize, miniSize);
       gl.setScissor(8, height - miniSize - 8, miniSize, miniSize);
 
+      scene.updateMatrixWorld(true);
       topCam.current.updateProjectionMatrix();
+      topCam.current.updateMatrixWorld(true);
       gl.render(scene, topCam.current!);
       gl.setScissorTest(false);
-      scene.updateMatrixWorld(true);
-      camera.updateMatrixWorld(true);
-      camera.updateProjectionMatrix();
     }
   });
 
