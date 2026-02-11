@@ -25,9 +25,9 @@ function MultiCameraRender({
     gl.autoClear = false;
     gl.setViewport(0, 0, width, height);
     gl.setScissor(0, 0, width, height);
+    scene.updateMatrixWorld(true);
+    camera.updateProjectionMatrix();
     gl.render(scene, camera);
-
-    gl.clearDepth();
 
     if (topCam.current && map) {
       gl.setScissorTest(true);
@@ -53,7 +53,7 @@ export default function Court() {
       <MainCamera />
       <OrthographicCamera
         ref={topCamera}
-        position={[0, 2, 0]}
+        position={[0, 20, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
         left={-20}
         right={20}
