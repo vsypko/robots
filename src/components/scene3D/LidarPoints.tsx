@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
-import { Points, PointMaterial } from '@react-three/drei';
+import { Points } from '@react-three/drei';
 import { useRapier } from '@react-three/rapier';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import useSettings from '../../context/useSettings';
 
 type LidarProps = {
@@ -30,17 +30,22 @@ export function LidarPoints({ maxDistance = 30, minDistance = 1, horizontal = 75
   const tanHalfFovHorizontal = Math.tan(halfFovRadHorizontal);
   const tanHalfFovVertical = Math.tan(halfFovRadVertical);
 
+  useEffect(() => {
+    if (!pointsRef.current) return;
+    const geometry = pointsRef.current.geometry;
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useFrame(({ camera }) => {
     if (!pointsRef.current || !world || !rapier) return;
 
-    const geometry = pointsRef.current.geometry;
-
     if (!selected || !fpv) {
-      geometry.setDrawRange(0, 0);
+      pointsRef.current.geometry.setDrawRange(0, 0);
       return;
     }
 
-    // Ensure camera's world matrix is up to date
     camera.getWorldPosition(origin);
     camera.getWorldQuaternion(quaternion);
 
@@ -59,42 +64,38 @@ export function LidarPoints({ maxDistance = 30, minDistance = 1, horizontal = 75
         const hit = world.castRay(ray, maxDistance, true);
         if (!hit) continue;
 
-        // let distance: number;
-        // let p: { x: number; y: number; z: number };
-
         const distance = hit.timeOfImpact;
         const p = ray.pointAt(distance);
-
-        // Calculate color gradient from green (0x00FF00) at distance 1 to blue (0x0000FF) at distance 20
-
-        const t = Math.max(0, Math.min(1, (distance - minDistance) / (maxDistance - minDistance)));
 
         positions[idx] = p.x;
         positions[idx + 1] = p.y;
         positions[idx + 2] = p.z;
 
-        colors[idx] = 0;
+        const t = Math.max(0, Math.min(1, (distance - minDistance) / (maxDistance - minDistance)));
+        colors[idx] = 1 - t;
         colors[idx + 1] = 1 - t;
         colors[idx + 2] = t;
 
         idx += 3;
       }
-
-      geometry.setDrawRange(0, idx / 3);
-
-      if (!geometry.attributes.color) {
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-      }
-      geometry.attributes.position.needsUpdate = true;
-      geometry.attributes.color.needsUpdate = true;
     }
 
+    pointsRef.current.geometry.attributes.position.needsUpdate = true;
+    pointsRef.current.geometry.attributes.color.needsUpdate = true;
+    pointsRef.current.geometry.setDrawRange(0, idx / 3);
     frameCounterRef.current++;
   });
 
   return (
     <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
-      <PointMaterial ref={materialRef} size={0.05} sizeAttenuation={true} vertexColors={true} depthWrite={false} />
+      <pointsMaterial
+        ref={materialRef}
+        size={3}
+        sizeAttenuation={false}
+        vertexColors={true}
+        depthWrite={false}
+        color="white"
+      />
     </Points>
   );
 }

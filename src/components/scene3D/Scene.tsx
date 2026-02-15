@@ -1,7 +1,7 @@
 import { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrthographicCamera } from '@react-three/drei';
-import type { OrthographicCamera as OrthographicCameraType } from 'three';
+import { SRGBColorSpace, type OrthographicCamera as OrthographicCameraType } from 'three';
 import Field from './Field';
 import Robot from '../robots/Robot';
 import { Physics } from '@react-three/rapier';
@@ -45,7 +45,7 @@ export default function Court() {
   const { light } = useSettings();
 
   return (
-    <Canvas shadows className="flex w-full h-full">
+    <Canvas shadows className="flex w-full h-full" gl={{ outputColorSpace: SRGBColorSpace }}>
       <MainCamera />
       <OrthographicCamera
         ref={topCamera}
