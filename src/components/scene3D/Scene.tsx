@@ -22,17 +22,12 @@ function MultiCameraRender({
 
   useFrame(({ gl, size, scene, camera }) => {
     const { width, height } = size;
-    scene.updateMatrixWorld(true);
-    camera.updateMatrixWorld(true);
-    camera.updateProjectionMatrix();
     gl.autoClear = false;
     gl.setViewport(0, 0, width, height);
     gl.setScissor(0, 0, width, height);
     gl.render(scene, camera);
 
     if (topCam.current && map) {
-      scene.updateMatrixWorld(true);
-      topCam.current.updateMatrixWorld(true);
       topCam.current.updateProjectionMatrix();
       gl.setScissorTest(true);
       gl.setViewport(8, height - miniSize - 8, miniSize, miniSize);
